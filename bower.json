@@ -1,0 +1,16 @@
+{
+  "name": "CS499Group3Game",
+  "version": "0.0.0",
+  "authors": [
+    "CS499Group3"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
