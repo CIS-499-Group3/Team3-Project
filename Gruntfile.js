@@ -15,7 +15,7 @@ module.exports = function(grunt) {
         },
         
         watch: {
-            files: 'src/**/*.js',
+            files: 'client_src/**/*.ts',
             tasks: ['typescript']
         },
 
@@ -34,8 +34,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-typescript');
+    
     grunt.registerTask('default', ['typescript', 'watch']);
-    grunt.registerTask('build', ['typescript', 'watch']);
+    grunt.registerTask('build', ['typescript']);
     grunt.registerTask('serve', ['connect', 'watch']);
 
 };
