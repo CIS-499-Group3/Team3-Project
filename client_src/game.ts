@@ -1,9 +1,10 @@
 /// <reference path="../app/components/phaser/typescript/phaser.d.ts"/>
-
+import creature = require('./creature');
 
 class PacmanGame {
 
     constructor() {
+        console.log("Yo!");
         this.game = new Phaser.Game(800, 600, Phaser.AUTO, 'game-div', { preload: this.preload, create: this.create, update: this.update});
     }
 
