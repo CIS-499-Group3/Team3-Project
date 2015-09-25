@@ -1,0 +1,6 @@
+# This file tells git to ignore things that we don't care about.
+
+node_modules/
+.idea/
+app/js/
+app/components/
