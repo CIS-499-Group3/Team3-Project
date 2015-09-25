@@ -9,12 +9,12 @@ class Game {
 
     game: Phaser.Game;
 
-    preload() {
+    preload(): void {
         this.game.load.image('testpic', 'assets/awesomePacman.png');
     }
 
-    create() {
-        var logo = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'testpic');
+    create(): void {
+        var logo: Phaser.Sprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'testpic');
         logo.anchor.setTo(0.5, 0.5);
     }
 
@@ -22,6 +22,6 @@ class Game {
 
 window.onload = () => {
 
-    var game = new Game();
+    var game: Game = new Game();
 
 };
