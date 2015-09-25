@@ -1,7 +1,7 @@
 /// <reference path="../app/components/phaser/typescript/phaser.d.ts"/>
 
 
-class Game {
+class PacmanGame {
 
     constructor() {
         this.game = new Phaser.Game(800, 600, Phaser.AUTO, 'game-div', { preload: this.preload, create: this.create });
@@ -22,6 +22,6 @@ class Game {
 
 window.onload = () => {
 
-    var game: Game = new Game();
+    var game: PacmanGame = new PacmanGame();
 
 };
