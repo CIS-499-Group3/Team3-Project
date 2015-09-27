@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Title</title>
-    <script data-main='js/game.js' src="components/requirejs/require.js"></script>
+    <title>CS 499 Group 3 Pacman</title>
+
+    <!-- We should obviously load phaser.js -->
     <script src="components/phaser/build/phaser.js"></script>
-    
+
+    <!-- Load require.js and tell it to run game.js as its "main"-->
+    <script data-main='js/game.js' src="components/requirejs/require.js"></script>
+
     <link rel="stylesheet" type="text/css" href="styles/index.css">
   </head>
 
   <body>
+      <!-- Phaser.js will inject its canvas into game-div. -->
       <div class="game-container"><span id="game-div" class="game-box"></span></div>
   </body>
 

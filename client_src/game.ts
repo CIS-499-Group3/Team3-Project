@@ -12,13 +12,12 @@ class PacmanGame {
 
     // Called by phaser to preload resources.
     preload(): void {
-        this.game.load.image('testpic', 'assets/awesomePacman.png');
+        this.game.load.image('badpacman', 'assets/awesomePacman.png');
     }
 
     // Called by phaser to set up the game world.
     create(): void {
-        var logo: Phaser.Sprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'testpic');
-        logo.anchor.setTo(0.5, 0.5);
+        var pacman = new creature.PlayerPacman(this.game, 10, 10);
     }
 
     // Called by phaser once per tick to update the game world.

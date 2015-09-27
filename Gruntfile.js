@@ -37,6 +37,6 @@ module.exports = function(grunt) {
 
     grunt.registerTask('default', ['typescript', 'watch']);
     grunt.registerTask('build', ['typescript']);
-    grunt.registerTask('serve', ['connect', 'watch']);
+    grunt.registerTask('serve', ['typescript','connect', 'watch']);
 
 };
