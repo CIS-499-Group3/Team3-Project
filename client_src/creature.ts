@@ -11,7 +11,6 @@ export class Creature extends Phaser.Sprite {
     public getContainingTile() {
         // TODO
     }
-
 }
 
 export class Pacman extends Creature {
