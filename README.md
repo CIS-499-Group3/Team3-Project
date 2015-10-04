@@ -34,5 +34,6 @@ Run `grunt build` to build the app. It'll mostly just convert the typescript to 
 
 Run `grunt serve` to serve the app on `http://localhost:8000`. It'll even watch the typescript for changes and auto-update the server as it's running!
 
-Compatibility:
+## Compatibility
+
 This app has been tested with Firefox version 41.0.1.  Other browsers are not yet supported - use at your own risk.  (It known not to work in Google Chrome version 45.0.2454.101.)
