@@ -2,6 +2,7 @@
 
 node_modules/
 .idea/
+*.zip
 app/js/
 app/components/
 *~
