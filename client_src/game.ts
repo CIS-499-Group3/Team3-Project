@@ -3,7 +3,7 @@ import creature = require('./creature');
 
 class PacmanGame {
     private game: Phaser.Game;
-    
+
     private player: creature.Pacman;
     private tilemap: Phaser.Tilemap;
     private layer: Phaser.TilemapLayer;
@@ -12,7 +12,7 @@ class PacmanGame {
         this.game = new Phaser.Game(800, 600, Phaser.AUTO, 'game-div', { preload: this.preload, create: this.create, update: this.update});
     }
 
-    
+
     // Called by phaser to preload resources.
     preload(): void {
         this.game.load.image('badpacman', 'assets/awesomePacman.png');
@@ -30,14 +30,14 @@ class PacmanGame {
         this.layer = this.tilemap.createLayer('layer')
         this.tilemap.addTilesetImage('testset');
 
-        
+
         this.tilemap.setCollision([0,1,2], true, this.layer);
-        
+
 
         console.log(this.layer)
         //this.layer.resizeWorld()
-        
-        
+
+
         //tilemap.fill(0,0,0,20,20);
         //this.game.add.existing(tilemap);
         this.player = new creature.PlayerPacman(this.game, 10, 10);
@@ -53,8 +53,5 @@ class PacmanGame {
 
 }
 
-window.onload = () => {
 
-    var game: PacmanGame = new PacmanGame();
-
-};
+var game: PacmanGame = new PacmanGame();
