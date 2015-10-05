@@ -15,7 +15,7 @@ export class Creature extends Phaser.Sprite {
 
 export class Pacman extends Creature {
     constructor(game: Phaser.Game, xtile, ytile){
-        super(game, xtile, ytile, "badpacman");
+        super(game, xtile, ytile, "squarepacman");
         //this.sprite = new Phaser.Sprite(game, 10, 10, "testpic");
     }
 }

@@ -16,9 +16,10 @@ class PacmanGame {
     // Called by phaser to preload resources.
     preload(): void {
         this.game.load.image('badpacman', 'assets/awesomePacman.png');
+        this.game.load.image('squarepacman', 'assets/squarepacman.png');
         this.game.load.image('testset', 'assets/testtileset.png');
         //this.game.load.tilemap('tiled2', 'assets/titled2.csv', null, Phaser.Tilemap.CSV);
-		this.game.load.tilemap('tileset3', 'assets/tiled_map3.csv', null, Phaser.Tilemap.CSV);
+        this.game.load.tilemap('tileset3', 'assets/tiled_map3.csv', null, Phaser.Tilemap.CSV);
     }
 
     // Called by phaser to set up the game world.
