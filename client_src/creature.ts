@@ -1,6 +1,10 @@
 import map = require('./map');
 
-var BASE_SPEED: number = 100;
+var BASE_SPEED: number = 150;
+
+// Number of pixels a sprite can be away from the center of the tile to be counted as "at the center".
+// Smaller values will likely cause bugs as creatures skip over their turns.
+var CENTER_TILE_EPSILON: number = 5;
 
 // A "Creature" is a sprite that moves with and understands the grid system of the pacman game.
 export class Creature extends Phaser.Sprite {
@@ -14,8 +18,8 @@ export class Creature extends Phaser.Sprite {
         this.centerOnTile(); // Let's avoid start-of-game weirdness by ensuring that we're in a sane starting spot.
     }
 
+    // The tile that the center of the creature is sitting in.
     public getContainingTile(): map.TileView {
-        // TODO: get center?
         return this.map.viewOfPixels(this.x, this.y);
     }
 
@@ -51,7 +55,6 @@ export class Creature extends Phaser.Sprite {
 export class Pacman extends Creature {
     constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile){
         super(game, map, xtile, ytile, "squarepacman");
-        //this.sprite = new Phaser.Sprite(game, 10, 10, "testpic");
     }
 }
 
@@ -77,6 +80,12 @@ export class PlayerPacman extends Pacman {
         // If we're close to the center AND the direction that we want to go is clear, we may now turn.
         if (distanceToCenter < 5 && this.getContainingTile().viewDirection(this.desiredDirection).isTraversable()){
             this.centerOnTile(); // Line ourselves up perfectly to fit.
+
+            // Mythical magic code. If you don't reset the physics of the sprite, the sprite will continue
+            // in its former direction for one frame. Don't ask me why, this just happened to fix it.
+            // This will probably break rotation and everything else one day.
+            this.body.reset(this.x, this.y);
+
             this.changeDirection(this.desiredDirection); // Change direction to where we wanted to go.
             this.desiredDirection = null; // Clear our desires.
         }
@@ -111,7 +120,6 @@ export class PlayerPacman extends Pacman {
             this.body.velocity.x = 0;
             this.body.velocity.y = 0;
         }
-
         this.attemptDesiredDirection();
     }
 }
