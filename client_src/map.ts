@@ -50,7 +50,7 @@ export enum Direction {
     WEST
 }
 
-// Represents the higher level 'view' of a tile and its neighbors.
+// Represents a higher level 'view' of a tile and its neighbors.
 export class TileView {
     private x: number;
     private y: number;
@@ -81,7 +81,7 @@ export class TileView {
         }
         return false;
     }
-    
+
     viewNorth(): TileView {
         return this.map.viewOf(this.x, this.y - 1);
     }
@@ -98,19 +98,18 @@ export class TileView {
         return this.map.viewOf(this.x - 1, this.y);
     }
 
+    viewDirection(direction: Direction){
+        if (direction == Direction.NORTH) return this.viewNorth();
+        if (direction == Direction.SOUTH) return this.viewSouth();
+        if (direction == Direction.EAST) return this.viewEast();
+        if (direction == Direction.WEST) return this.viewWest();
+    }
     // Gets all adjacent tiles.
     adjacent(): TileView[] {
         return [this.viewNorth(), this.viewSouth(), this.viewEast(), this.viewWest()];
     }
 
-    // adjacentTagged(): Array<{direction: Direction, view: TileView}> {
-    //     var adjs = [];
-    //     for (var direction of [Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST]){
-    //         adjs.push({direction: direction, view: 
-    //     }
-    // }
-
-    
+    // Gets all directions from this tile that can be traversed by a creature.
     getTraversableDirections(): Direction[] {
         var directions: Direction[] = [];
         var north = this.viewNorth();
@@ -124,4 +123,32 @@ export class TileView {
         if (west.isTraversable()) directions.push(Direction.WEST);
         return directions;
     }
+
+    // Top left corner of the tile in world pixels.
+    getPixelX(): number {
+        return this.getTile().worldX;
+    }
+
+    // Top left corner of the tile in world pixels.
+    getPixelY(): number {
+        return this.getTile().worldY;
+    }
+
+    // Center of the tile in world pixels.
+    getCenterX(): number {
+        return this.getTile().centerX + this.getPixelX();
+    }
+
+    // Center of the tile in world pixels
+    getCenterY(): number {
+        return this.getTile().centerY + this.getPixelY();
+    }
+
+    // Measures the distance of an object from the center of the tile.
+    distanceFromCenter(obj: {x: number, y: number}): number{
+        return Phaser.Point.distance(new Phaser.Point(this.getCenterX(), this.getCenterY()), obj);
+    }
+
+
+
 }
