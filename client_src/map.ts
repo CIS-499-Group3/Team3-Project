@@ -1,12 +1,16 @@
 
-
+// This will need to be updated when the tileset is.
+// This just gives convenient names to the tileset indexes.
 export enum TileID {
     FLOOR = 0,
     WALL = 1,
     DOT_TEST = 2
 }
 
+// These tiles can be walked on by creatures.
 var TRAVERSABLE_TILES = [TileID.FLOOR]
+
+// A Pacman map. Mostly just a wrapper over tilemap that understands some pacman logic.
 
 export class PacMap {
     private tilemap: Phaser.Tilemap;
@@ -46,7 +50,7 @@ export enum Direction {
     WEST
 }
 
-
+// Represents the higher level 'view' of a tile and its neighbors.
 export class TileView {
     private x: number;
     private y: number;
@@ -62,6 +66,7 @@ export class TileView {
         return this.map.getTilemap().getTile(this.x, this.y);
     }
 
+    // Gets the tileset index of the tile.
     getTileId(): TileID {
         return this.getTile().index;
     }
@@ -93,6 +98,7 @@ export class TileView {
         return this.map.viewOf(this.x - 1, this.y);
     }
 
+    // Gets all adjacent tiles.
     adjacent(): TileView[] {
         return [this.viewNorth(), this.viewSouth(), this.viewEast(), this.viewWest()];
     }
