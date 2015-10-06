@@ -9,6 +9,11 @@
 
 - Alan Boggess
 
+# Play without building
+You can play a (possibly outdated) static version [here](https://cis-499-group3.github.io/Team3-Project/)
+
+At the moment the pre-built static version has to be updated manually, so it may be a bit behind.
+
 # How to build
 ## Setup
 First you'll need npm. NPM is the node.js package manager. We aren't using node (yet...?) but a lot of web tools (like what we're using) are built upon node.  NPM is bundled with node, which can be found at https://nodejs.org/ .  
@@ -37,3 +42,4 @@ Run `grunt serve` to serve the app on `http://localhost:8000`. It'll even watch 
 # Compatibility
 
 This app has been tested with Firefox version 41.0.1 and Google Chrome version 45.0.2454.101.  Other browsers and versions are not yet supported - use at your own risk.
+
