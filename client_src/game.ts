@@ -10,6 +10,7 @@ class PacmanGame {
     private tilemap: Phaser.Tilemap;
     private smallDot: dot.SmallDot;
     private layer: Phaser.TilemapLayer;
+   
     constructor() {
         console.log("Yo!");
         this.game = new Phaser.Game(800, 600, Phaser.AUTO, 'game-div', { preload: this.preload, create: this.create, update: this.update});
@@ -28,6 +29,8 @@ class PacmanGame {
         this.game.load.tilemap('tileset4', 'assets/tiled_4.csv', null, Phaser.Tilemap.CSV);
     }
 
+    
+    
     // Called by phaser to set up the game world.
     create(): void {
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -56,6 +59,11 @@ class PacmanGame {
         new creature.Ghost(this.game, pacMap, 50, 50);
         
         this.smallDot = new dot.SmallDot(this.game, pacMap, (10*this.tilemap.tileWidth)-160, (10*this.tilemap.tileHeight)-100);
+    
+        
+        //The score
+        
+        scoreText = this.game.add.text((20*this.tilemap.tileWidth), (this.tilemap.tileHeight), 'Score:0', { fontSize: '32px', fill: '#0000FF' });
     }
 
     // Called by phaser once per tick to update the game world.
@@ -71,9 +79,14 @@ class PacmanGame {
     }
 
 }
+
+ var score = 0; 
+ var scoreText;
+
 //collectDot destroys dot and adds points etc.
 function collectDot(Creature, Dot){
 this.smallDot.destroy();
-
+score += 42;
+scoreText.text = 'Score:' + score;
 }
 var game: PacmanGame = new PacmanGame();
