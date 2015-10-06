@@ -1,0 +1,148 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+define(["require", "exports", './map'], function (require, exports, map) {
+    var BASE_SPEED = 150;
+    // Number of pixels a sprite can be away from the center of the tile to be counted as "at the center".
+    // Smaller values will likely cause bugs as creatures skip over their turns.
+    var CENTER_TILE_EPSILON = 5;
+    // A "Creature" is a sprite that moves with and understands the grid system of the pacman game.
+    var Creature = (function (_super) {
+        __extends(Creature, _super);
+        function Creature(game, map, xtile, ytile, key) {
+            var x = map.viewOf(xtile, ytile).getPixelX();
+            var y = map.viewOf(xtile, ytile).getPixelX();
+            _super.call(this, game, x, y, key); // Call the "Sprite" constructor.
+            this.map = map;
+            game.physics.enable(this, Phaser.Physics.ARCADE); // Turn on basic arcade physics for creatures.
+            this.anchor = new Phaser.Point(0.5, 0.5); // Set the 'origin' of the sprite to the center of it.
+            game.add.existing(this); // Add ourselves to the game.
+            this.centerOnTile(); // Let's avoid start-of-game weirdness by ensuring that we're in a sane starting spot.
+        }
+        // The tile that the center of the creature is sitting in.
+        Creature.prototype.getContainingTile = function () {
+            return this.map.viewOfPixels(this.x, this.y);
+        };
+        Creature.prototype.centerOnTile = function () {
+            this.x = this.getContainingTile().getCenterX();
+            this.y = this.getContainingTile().getCenterY();
+        };
+        Creature.prototype.changeDirection = function (direction) {
+            if (direction == map.Direction.NORTH) {
+                this.body.velocity.y = -BASE_SPEED;
+                this.body.velocity.x = 0;
+            }
+            else if (direction == map.Direction.SOUTH) {
+                this.body.velocity.y = BASE_SPEED;
+                this.body.velocity.x = 0;
+            }
+            else if (direction == map.Direction.EAST) {
+                this.body.velocity.x = BASE_SPEED;
+                this.body.velocity.y = 0;
+            }
+            else if (direction == map.Direction.WEST) {
+                this.body.velocity.x = -BASE_SPEED;
+                this.body.velocity.y = 0;
+            }
+            else {
+                this.body.velocity.x = 0;
+                this.body.velocity.y = 0;
+            }
+        };
+        return Creature;
+    })(Phaser.Sprite);
+    exports.Creature = Creature;
+    var Pacman = (function (_super) {
+        __extends(Pacman, _super);
+        function Pacman(game, map, xtile, ytile) {
+            _super.call(this, game, map, xtile, ytile, "pacman");
+        }
+        return Pacman;
+    })(Creature);
+    exports.Pacman = Pacman;
+    // Let's seperate this from the pure Pacman class, just in case we want to add multiplayer in the future.
+    var PlayerPacman = (function (_super) {
+        __extends(PlayerPacman, _super);
+        function PlayerPacman(game, map, xtile, ytile) {
+            _super.call(this, game, map, xtile, ytile);
+            this.desiredDirection = null;
+            this.scale.set(.5, .5);
+            this.animations.add('move', [0, 1, 2, 1], 10, true);
+        }
+        PlayerPacman.prototype.setDesiredDirection = function (direction) {
+            this.desiredDirection = direction;
+        };
+        PlayerPacman.prototype.attemptDesiredDirection = function () {
+            // If we don't have a desired direction, keep on truckin
+            if (this.desiredDirection == null)
+                return;
+            // Distance to center of the tile. We use this to figure out when we should turn exactly.
+            var distanceToCenter = this.getContainingTile().distanceFromCenter(this);
+            // If we're close to the center AND the direction that we want to go is clear, we may now turn.
+            if (distanceToCenter < 5 && this.getContainingTile().viewDirection(this.desiredDirection).isTraversable()) {
+                this.centerOnTile(); // Line ourselves up perfectly to fit.
+                //turns in the direction of move.
+                if (this.desiredDirection == map.Direction.WEST) {
+                    this.angle = 180;
+                }
+                else if (this.desiredDirection == map.Direction.EAST) {
+                    this.angle = 0;
+                }
+                else if (this.desiredDirection == map.Direction.SOUTH) {
+                    this.angle = 90;
+                }
+                else if (this.desiredDirection == map.Direction.NORTH) {
+                    this.angle = -90;
+                }
+                this.animations.play('move');
+                // Mythical magic code. If you don't reset the physics of the sprite, the sprite will continue
+                // in its former direction for one frame. Don't ask me why, this just happened to fix it.
+                // This will probably break rotation and everything else one day.
+                this.body.reset(this.x, this.y);
+                this.changeDirection(this.desiredDirection); // Change direction to where we wanted to go.
+                this.desiredDirection = null; // Clear our desires.
+            }
+        };
+        PlayerPacman.prototype.update = function () {
+            // This is called by the Sprite class once every tick.
+            if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+                this.setDesiredDirection(map.Direction.WEST);
+            }
+            if (this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+                this.setDesiredDirection(map.Direction.EAST);
+            }
+            if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
+                this.setDesiredDirection(map.Direction.SOUTH);
+            }
+            if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
+                this.setDesiredDirection(map.Direction.NORTH);
+            }
+            // DEBUG control: Center pacman on tile.
+            if (this.game.input.keyboard.isDown(Phaser.Keyboard.C)) {
+                this.centerOnTile();
+            }
+            // DEBUG control: Stop pacman entirely.
+            if (this.game.input.keyboard.isDown(Phaser.Keyboard.S)) {
+                this.body.velocity.x = 0;
+                this.body.velocity.y = 0;
+            }
+            this.attemptDesiredDirection();
+        };
+        return PlayerPacman;
+    })(Pacman);
+    exports.PlayerPacman = PlayerPacman;
+    var Ghost = (function (_super) {
+        __extends(Ghost, _super);
+        function Ghost(game, map, xtile, ytile) {
+            _super.call(this, game, map, xtile, ytile, "blinky");
+            this.animations.add('creep', [0, 1, 2, 3, 4, 5, 6, 7], 10, true);
+            this.animations.play('creep');
+        }
+        return Ghost;
+    })(Creature);
+    exports.Ghost = Ghost;
+});
+//# sourceMappingURL=creature.js.map
