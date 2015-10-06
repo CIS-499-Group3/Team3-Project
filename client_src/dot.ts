@@ -31,3 +31,11 @@ import game = require('./game');
     
  }
  
+ function collectdot () {
+
+    // Removes the dot from the screen
+    this.kill();
+
+
+}
+
