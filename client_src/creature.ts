@@ -10,7 +10,10 @@ var CENTER_TILE_EPSILON: number = 5;
 export class Creature extends Phaser.Sprite {
     private map: map.PacMap;
     constructor(game: Phaser.Game, map: map.PacMap, xtile: number, ytile: number, key: string){
-        super(game, xtile, ytile, key); // Call the "Sprite" constructor.
+        var x = map.viewOf(xtile, ytile).getPixelX();
+        var y = map.viewOf(xtile, ytile).getPixelX();
+        
+        super(game, x, y, key); // Call the "Sprite" constructor.
         this.map = map;
         game.physics.enable(this, Phaser.Physics.ARCADE); // Turn on basic arcade physics for creatures.
         this.anchor = new Phaser.Point(0.5, 0.5); // Set the 'origin' of the sprite to the center of it.

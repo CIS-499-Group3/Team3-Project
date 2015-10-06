@@ -59,10 +59,10 @@ class PacmanGame {
 
         //tilemap.fill(0,0,0,20,20);
         //this.game.add.existing(tilemap);
-        this.player = new creature.PlayerPacman(this.game, pacMap, (10*this.tilemap.tileWidth)-40, (10*this.tilemap.tileHeight)-40);
+        this.player = new creature.PlayerPacman(this.game, pacMap, 4, 2);
 
         // Blinky, for the deliverables.
-        new creature.Ghost(this.game, pacMap, 50, 50);
+        new creature.Ghost(this.game, pacMap, 1, 1);
 
         this.smallDot = new dot.SmallDot(this.game, pacMap, (10*this.tilemap.tileWidth)-160, (10*this.tilemap.tileHeight)-100);
 
