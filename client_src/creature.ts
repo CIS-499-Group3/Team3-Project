@@ -141,5 +141,7 @@ export class PlayerPacman extends Pacman {
 export class Ghost extends Creature {
     constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile){
         super(game, map, xtile, ytile, "blinky");
+        this.animations.add('creep', [0,1,2,3,4,5,6,7],10, true);
+        this.animations.play('creep');
     }
 }
