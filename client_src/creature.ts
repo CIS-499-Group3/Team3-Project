@@ -54,7 +54,7 @@ export class Creature extends Phaser.Sprite {
 
 export class Pacman extends Creature {
     constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile){
-        super(game, map, xtile, ytile, "squarepacman");
+        super(game, map, xtile, ytile, "pacman");
 
     }
 }
@@ -67,7 +67,7 @@ export class PlayerPacman extends Pacman {
         super(game, map, xtile, ytile);
                 this.scale.set(.5,.5);
                 this.animations.add('move', [0, 1, 2, 1], 10, true);
-                
+
     }
 
     private setDesiredDirection(direction: map.Direction){
