@@ -55,6 +55,7 @@ export class Creature extends Phaser.Sprite {
 export class Pacman extends Creature {
     constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile){
         super(game, map, xtile, ytile, "squarepacman");
+
     }
 }
 
@@ -64,6 +65,9 @@ export class PlayerPacman extends Pacman {
 
     constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile){
         super(game, map, xtile, ytile);
+                this.scale.set(.5,.5);
+                this.animations.add('move', [0, 1, 2, 1], 10, true);
+                
     }
 
     private setDesiredDirection(direction: map.Direction){
@@ -80,7 +84,17 @@ export class PlayerPacman extends Pacman {
         // If we're close to the center AND the direction that we want to go is clear, we may now turn.
         if (distanceToCenter < 5 && this.getContainingTile().viewDirection(this.desiredDirection).isTraversable()){
             this.centerOnTile(); // Line ourselves up perfectly to fit.
-
+            //turns in the direction of move.
+            if(this.desiredDirection == map.Direction.WEST){
+                this.angle = 180;
+            }else if(this.desiredDirection == map.Direction.EAST){
+                this.angle = 0;
+            }else if(this.desiredDirection == map.Direction.SOUTH){
+                this.angle = 90;
+            }else if(this.desiredDirection == map.Direction.NORTH){
+                this.angle = -90;
+            }
+            this.animations.play('move');
             // Mythical magic code. If you don't reset the physics of the sprite, the sprite will continue
             // in its former direction for one frame. Don't ask me why, this just happened to fix it.
             // This will probably break rotation and everything else one day.

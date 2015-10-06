@@ -19,7 +19,8 @@ class PacmanGame {
     // Called by phaser to preload resources.
     preload(): void {
         this.game.load.image('badpacman', 'assets/awesomePacman.png');
-        this.game.load.image('squarepacman', 'assets/squarepacman.png');
+        //this.game.load.image('squarepacman', 'assets/squarepacman.png');
+        this.game.load.atlasJSONHash('squarepacman', 'assets/pacmove.png', 'assets/pacmove.json')
         this.game.load.image('testset', 'assets/testtileset.png');
         this.game.load.image('blinky', 'assets/blinky.png')
         this.game.load.image('smalldot', 'assets/dot2.png');
@@ -50,7 +51,8 @@ class PacmanGame {
         //tilemap.fill(0,0,0,20,20);
         //this.game.add.existing(tilemap);
         this.player = new creature.PlayerPacman(this.game, pacMap, (10*this.tilemap.tileWidth)-40, (10*this.tilemap.tileHeight)-40);
-
+        
+        
         new creature.Ghost(this.game, pacMap, 50, 50);
         
         this.smallDot = new dot.SmallDot(this.game, pacMap, (10*this.tilemap.tileWidth)-160, (10*this.tilemap.tileHeight)-100);
@@ -58,17 +60,18 @@ class PacmanGame {
 
     // Called by phaser once per tick to update the game world.
     update(): void {
-    
-            this.game.physics.arcade.overlap(this.player, this.smallDot, collectDot, null, this);
+              //dot collision
+        this.game.physics.arcade.overlap(this.player, this.smallDot, collectDot, null, this);
         this.game.physics.arcade.collide(this.player, this.layer);
         this.game.physics.arcade.collide(this.player, this.layer, (s,t) => {
             console.log("Collide " + s + " " + t)
-            //dot collision
+            
             
         });
     }
 
 }
+//collectDot destroys dot and adds points etc.
 function collectDot(Creature, Dot){
 this.smallDot.destroy();
 
