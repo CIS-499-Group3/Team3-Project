@@ -57,5 +57,7 @@ export class PlayerPacman extends Pacman {
 }
 
 export class Ghost extends Creature {
-
+    constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile){
+        super(game, map, xtile, ytile, "blinky");
+    }
 }

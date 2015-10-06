@@ -19,6 +19,7 @@ class PacmanGame {
         this.game.load.image('badpacman', 'assets/awesomePacman.png');
         this.game.load.image('squarepacman', 'assets/squarepacman.png');
         this.game.load.image('testset', 'assets/testtileset.png');
+        this.game.load.image('blinky', 'assets/blinky.png')
         //this.game.load.tilemap('tiled2', 'assets/titled2.csv', null, Phaser.Tilemap.CSV);
         this.game.load.tilemap('tileset4', 'assets/tiled_4.csv', null, Phaser.Tilemap.CSV);
     }
@@ -33,7 +34,7 @@ class PacmanGame {
         this.layer = this.tilemap.createLayer('layer')
         this.tilemap.addTilesetImage('testset');
 
-        
+
         this.tilemap.setCollision([1,2], true, this.layer);
         this.tilemap.setCollision(0,false, this.layer); // Set floors to not collide.
 
@@ -46,6 +47,8 @@ class PacmanGame {
         //tilemap.fill(0,0,0,20,20);
         //this.game.add.existing(tilemap);
         this.player = new creature.PlayerPacman(this.game, pacMap, (10*this.tilemap.tileWidth)-40, (10*this.tilemap.tileHeight)-40);
+
+        new creature.Ghost(this.game, pacMap, 50, 50);
     }
 
     // Called by phaser once per tick to update the game world.
