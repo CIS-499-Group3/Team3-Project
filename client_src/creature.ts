@@ -80,30 +80,20 @@ export class Creature extends Phaser.Sprite {
     }
 }
 
-export class Pacman extends Creature {
-    constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile){
-        super(game, map, xtile, ytile, "pacman");
-        this.faceMovementDirection = true;
-
-    }
-}
-
-// Let's seperate this from the pure Pacman class, just in case we want to add multiplayer in the future.
-export class PlayerPacman extends Pacman {
+/* A DesiredDirectionCreature is a Creature that has a "desire" to
+ * move in a particular direction, but will wait until an opportunity
+ * is available.
+ * 
+ * Any subclasses will need to call this.attemptDesiredDirection(), probably in update().
+ */
+export class DesiredDirectionCreature extends Creature {
     private desiredDirection: map.Direction = null;
 
-    constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile){
-        super(game, map, xtile, ytile);
-        this.scale.set(.5,.5);
-        this.animations.add('move', [0, 1, 2, 1], 10, true);
-
-    }
-
-    private setDesiredDirection(direction: map.Direction){
+    public setDesiredDirection(direction: map.Direction){
         this.desiredDirection = direction;
     }
 
-    private attemptDesiredDirection(){
+    protected attemptDesiredDirection(){
         // If we don't have a desired direction, keep on truckin
         if (this.desiredDirection == null) return;
 
@@ -129,6 +119,25 @@ export class PlayerPacman extends Pacman {
         }
     }
 
+}
+
+export class Pacman extends DesiredDirectionCreature {
+    constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile){
+        super(game, map, xtile, ytile, "pacman");
+        this.faceMovementDirection = true;
+    }
+}
+
+// Let's seperate this from the pure Pacman class, just in case we want to add multiplayer in the future.
+export class PlayerPacman extends Pacman {
+
+    constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile){
+        super(game, map, xtile, ytile);
+        this.scale.set(.5,.5);
+        this.animations.add('move', [0, 1, 2, 1], 10, true);
+
+    }
+   
     update(){
         // This is called by the Sprite class once every tick.
 
