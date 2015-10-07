@@ -50,6 +50,10 @@ export enum Direction {
     WEST
 }
 
+export function randomDirection(): Direction{
+    return Math.floor(Math.random() * 4)
+}
+
 // Represents a higher level 'view' of a tile and its neighbors.
 export class TileView {
     private x: number;

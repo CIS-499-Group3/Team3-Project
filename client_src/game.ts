@@ -62,7 +62,7 @@ class PacmanGame {
         this.player = new creature.PlayerPacman(this.game, pacMap, 4, 2);
 
         // Blinky, for the deliverables.
-        new creature.Ghost(this.game, pacMap, 1, 1);
+        new creature.RandomGhost(this.game, pacMap, 1, 1);
 
         this.smallDot = new dot.SmallDot(this.game, pacMap, (10*this.tilemap.tileWidth)-160, (10*this.tilemap.tileHeight)-100);
 

@@ -105,7 +105,7 @@ export class DesiredDirectionCreature extends Creature {
             this.centerOnTile(); // Line ourselves up perfectly to fit.
             
             //turns in the direction of move.
-            this.setFacing(this.desiredDirection)
+            //this.setFacing(this.desiredDirection)
             
             this.animations.play('move');
             
@@ -171,10 +171,18 @@ export class PlayerPacman extends Pacman {
     }
 }
 
-export class Ghost extends Creature {
+export class Ghost extends DesiredDirectionCreature {
     constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile){
         super(game, map, xtile, ytile, "blinky");
         this.animations.add('creep', [0,1,2,3,4,5,6,7],10, true);
         this.animations.play('creep');
+    }
+}
+
+export class RandomGhost extends Ghost {
+    update(){
+        this.setDesiredDirection(map.randomDirection())
+        this.attemptDesiredDirection();
+
     }
 }
