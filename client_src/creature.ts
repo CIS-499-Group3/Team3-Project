@@ -31,27 +31,31 @@ export class Creature extends Phaser.Sprite {
         return this.map.viewOfPixels(this.x, this.y);
     }
 
+    // Centers the sprite on its current tile.
     centerOnTile(): void {
         this.x = this.getContainingTile().getCenterX();
         this.y = this.getContainingTile().getCenterY();
     }
 
+    // Sets the direction that the sprite is currently moving.
     changeDirection(direction: map.Direction){
+        
+        // If this sprite turns with its movement, update the facing.
         if (this.faceMovementDirection) this.setFacing(direction);
         
-        if (direction == map.Direction.NORTH) {
+        if (direction === map.Direction.NORTH) {
             this.body.velocity.y = -BASE_SPEED;
             this.body.velocity.x = 0;
 
-        } else if (direction == map.Direction.SOUTH) {
+        } else if (direction === map.Direction.SOUTH) {
             this.body.velocity.y = BASE_SPEED;
             this.body.velocity.x = 0;
 
-        } else if (direction == map.Direction.EAST) {
+        } else if (direction === map.Direction.EAST) {
             this.body.velocity.x = BASE_SPEED;
             this.body.velocity.y = 0;
 
-        } else if (direction == map.Direction.WEST) {
+        } else if (direction === map.Direction.WEST) {
             this.body.velocity.x = -BASE_SPEED;
             this.body.velocity.y = 0;
 
@@ -61,14 +65,16 @@ export class Creature extends Phaser.Sprite {
         }
     }
 
+    // Changes the direction that the sprite is facing.
+    // Note that the default here is assumed to be the sprite facing EAST.
     setFacing(direction: map.Direction){
         if (direction == map.Direction.WEST){
             this.angle = 180;
-        } else if (direction == map.Direction.EAST){
+        } else if (direction === map.Direction.EAST){
             this.angle = 0;
-        } else if (direction == map.Direction.SOUTH){
+        } else if (direction === map.Direction.SOUTH){
             this.angle = 90;
-        } else if (direction == map.Direction.NORTH){
+        } else if (direction === map.Direction.NORTH){
             this.angle = -90;
         }
     }

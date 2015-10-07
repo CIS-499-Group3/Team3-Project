@@ -74,7 +74,7 @@ export class TileView {
     // Can a creature walk across this tile?
     isTraversable(): boolean {
         for (var id of TRAVERSABLE_TILES){
-            if (this.getTileId() == id){
+            if (this.getTileId() === id){
                 //console.log(this.getTileId() + " Can be walked on");
                 return true;
             }
@@ -98,11 +98,11 @@ export class TileView {
         return this.map.viewOf(this.x - 1, this.y);
     }
 
-    viewDirection(direction: Direction){
-        if (direction == Direction.NORTH) return this.viewNorth();
-        if (direction == Direction.SOUTH) return this.viewSouth();
-        if (direction == Direction.EAST) return this.viewEast();
-        if (direction == Direction.WEST) return this.viewWest();
+    viewDirection(direction: Direction): TileView {
+        if (direction === Direction.NORTH) return this.viewNorth();
+        if (direction === Direction.SOUTH) return this.viewSouth();
+        if (direction === Direction.EAST) return this.viewEast();
+        if (direction === Direction.WEST) return this.viewWest();
     }
     // Gets all adjacent tiles.
     adjacent(): TileView[] {
