@@ -10,16 +10,16 @@ var CENTER_TILE_EPSILON: number = 5;
 export class Creature extends Phaser.Sprite {
     private map: map.PacMap;
     public faceMovementDirection: boolean;
-    
+
     constructor(game: Phaser.Game, map: map.PacMap, xtile: number, ytile: number, key: string){
-        var x = map.viewOf(xtile, ytile).getPixelX();
-        var y = map.viewOf(xtile, ytile).getPixelX();
-        
+        let x = map.viewOf(xtile, ytile).getPixelX();
+        let y = map.viewOf(xtile, ytile).getPixelY();
+
         super(game, x, y, key); // Call the "Sprite" constructor.
         this.map = map;
-        
+
         this.faceMovementDirection = false;
-        
+
         game.physics.enable(this, Phaser.Physics.ARCADE); // Turn on basic arcade physics for creatures.
         this.anchor = new Phaser.Point(0.5, 0.5); // Set the 'origin' of the sprite to the center of it.
         game.add.existing(this); // Add ourselves to the game.
@@ -39,10 +39,10 @@ export class Creature extends Phaser.Sprite {
 
     // Sets the direction that the sprite is currently moving.
     changeDirection(direction: map.Direction){
-        
+
         // If this sprite turns with its movement, update the facing.
         if (this.faceMovementDirection) this.setFacing(direction);
-        
+
         if (direction === map.Direction.NORTH) {
             this.body.velocity.y = -BASE_SPEED;
             this.body.velocity.x = 0;
@@ -83,7 +83,7 @@ export class Creature extends Phaser.Sprite {
 /* A DesiredDirectionCreature is a Creature that has a "desire" to
  * move in a particular direction, but will wait until an opportunity
  * is available.
- * 
+ *
  * Any subclasses will need to call this.attemptDesiredDirection(), probably in update().
  */
 export class DesiredDirectionCreature extends Creature {
@@ -103,12 +103,12 @@ export class DesiredDirectionCreature extends Creature {
         // If we're close to the center AND the direction that we want to go is clear, we may now turn.
         if (distanceToCenter < 5 && this.getContainingTile().viewDirection(this.desiredDirection).isTraversable()){
             this.centerOnTile(); // Line ourselves up perfectly to fit.
-            
+
             //turns in the direction of move.
             //this.setFacing(this.desiredDirection)
-            
+
             this.animations.play('move');
-            
+
             // Mythical magic code. If you don't reset the physics of the sprite, the sprite will continue
             // in its former direction for one frame. Don't ask me why, this just happened to fix it.
             // This will probably break rotation and everything else one day.
@@ -137,7 +137,7 @@ export class PlayerPacman extends Pacman {
         this.animations.add('move', [0, 1, 2, 1], 10, true);
 
     }
-   
+
     update(){
         // This is called by the Sprite class once every tick.
 

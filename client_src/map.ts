@@ -4,7 +4,11 @@
 export enum TileID {
     FLOOR = 0,
     WALL = 1,
-    DOT_TEST = 2
+    DOT_TEST = 2,
+    DOT_TILE = 3,
+    TELEPORT = 4,
+    PACMAN_SPAWN = 5
+
 }
 
 // These tiles can be walked on by creatures.
@@ -30,16 +34,36 @@ export class PacMap {
         return this.tilemap.width;
     }
 
+    // Returns the TileView at a set of tile coordinates.
     viewOf(x: number, y: number): TileView {
         return new TileView(this, x, y);
     }
 
+    // Returns the TileView at a certain pixel coordinate.
     viewOfPixels(x: number, y: number): TileView {
         var tile = this.tilemap.getTileWorldXY(x, y);
         if (tile == null){
             return null;
         }
         return this.viewOf(tile.x, tile.y);
+    }
+
+    allTilesWithID(id: TileID): TileView[] {
+        var matchingTiles: Phaser.Tile[] = [];
+        this.tilemap.forEach(tile => {
+            if (tile.index === id){
+                matchingTiles.push(tile);
+                console.log("Match: ", tile.x, " ", tile.y)
+            }
+        }, 0, 0, 0, this.tilemap.width, this.tilemap.height);
+
+        // Convert our Tiles to TileViews.
+        var matchingTileViews: TileView[] = matchingTiles.map(tile => this.viewOf(tile.x, tile.y));
+        return matchingTileViews;
+    }
+
+    getPacmanSpawns(): TileView[] {
+        return this.allTilesWithID(TileID.PACMAN_SPAWN);
     }
 }
 
@@ -50,8 +74,8 @@ export enum Direction {
     WEST
 }
 
-export function randomDirection(): Direction{
-    return Math.floor(Math.random() * 4)
+export function randomDirection(): Direction {
+    return Math.floor(Math.random() * 4);
 }
 
 // Represents a higher level 'view' of a tile and its neighbors.
@@ -73,6 +97,14 @@ export class TileView {
     // Gets the tileset index of the tile.
     getTileId(): TileID {
         return this.getTile().index;
+    }
+
+    getX(): number {
+        return this.getTile().x;
+    }
+
+    getY(): number {
+        return this.getTile().y;
     }
 
     // Can a creature walk across this tile?

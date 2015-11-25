@@ -16,7 +16,7 @@ class PacmanGame {
 
     constructor() {
         console.log("Yo!");
-        this.game = new Phaser.Game(800, 600, Phaser.AUTO, 'game-div', { preload: this.preload, create: this.create, update: this.update});
+        this.game = new Phaser.Game(800, 800, Phaser.AUTO, 'game-div', { preload: this.preload, create: this.create, update: this.update});
         this.score = 0;
     }
 
@@ -31,7 +31,7 @@ class PacmanGame {
         //this.game.load.image('blinky', 'assets/blinky.png')
         this.game.load.image('smalldot', 'assets/dot2.png');
         //this.game.load.tilemap('tiled2', 'assets/titled2.csv', null, Phaser.Tilemap.CSV);
-        this.game.load.tilemap('tileset4', 'assets/tiled_4.csv', null, Phaser.Tilemap.CSV);
+        this.game.load.tilemap('tileset', 'assets/test_map_5.csv', null, Phaser.Tilemap.CSV);
     }
 
 
@@ -39,7 +39,7 @@ class PacmanGame {
     // Called by phaser to set up the game world.
     create(): void {
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
-        this.tilemap = this.game.add.tilemap('tileset4');
+        this.tilemap = this.game.add.tilemap('tileset');
         //this.tilemap.create('layer', 20, 20, 32 ,32);
         //this.tilemap.putTile(1,4,4);
 
@@ -57,9 +57,10 @@ class PacmanGame {
 
         var pacMap: map.PacMap = new map.PacMap(this.tilemap);
 
-        //tilemap.fill(0,0,0,20,20);
-        //this.game.add.existing(tilemap);
-        this.player = new creature.PlayerPacman(this.game, pacMap, 4, 2);
+        // Find where pacman should spawn.
+        var pacmanSpawnTile = pacMap.getPacmanSpawns()[0];
+        console.log("Spawn tile: ", pacmanSpawnTile.getX(), pacmanSpawnTile.getY())
+        this.player = new creature.PlayerPacman(this.game, pacMap, pacmanSpawnTile.getX(), pacmanSpawnTile.getY());
 
         // Blinky, for the deliverables.
         new creature.RandomGhost(this.game, pacMap, 1, 1);
