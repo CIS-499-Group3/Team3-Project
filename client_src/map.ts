@@ -48,18 +48,23 @@ export class PacMap {
         return this.viewOf(tile.x, tile.y);
     }
 
-    allTilesWithID(id: TileID): TileView[] {
-        var matchingTiles: Phaser.Tile[] = [];
+    // Applies callback to every tile in the map.
+    forEachView(callback: (tile: TileView) => void){
         this.tilemap.forEach(tile => {
-            if (tile.index === id){
-                matchingTiles.push(tile);
-                console.log("Match: ", tile.x, " ", tile.y)
-            }
+            callback(this.viewOf(tile.x, tile.y));
         }, 0, 0, 0, this.tilemap.width, this.tilemap.height);
+    }
 
-        // Convert our Tiles to TileViews.
-        var matchingTileViews: TileView[] = matchingTiles.map(tile => this.viewOf(tile.x, tile.y));
-        return matchingTileViews;
+    // Get all tiles with a certain ID.
+    allTilesWithID(id: TileID): TileView[] {
+        var matchingTiles: TileView[] = [];
+        this.forEachView(tileView => {
+            if (tileView.getTile().index === id){
+                matchingTiles.push(tileView);
+            }
+        });
+
+        return matchingTiles;
     }
 
     getPacmanSpawns(): TileView[] {
@@ -181,10 +186,12 @@ export class TileView {
     }
 
     // Measures the distance of an object from the center of the tile.
-    distanceFromCenter(obj: {x: number, y: number}): number{
+    distanceFromCenter(obj: {x: number, y: number}): number {
         return Phaser.Point.distance(new Phaser.Point(this.getCenterX(), this.getCenterY()), obj);
     }
 
-
-
+    // Is an object within epsilon pixels of the center?
+    isAtCenter(obj: {x: number, y: number}, epsilon: number): boolean {
+        return this.distanceFromCenter(obj) < epsilon;
+    }
 }

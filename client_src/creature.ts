@@ -4,7 +4,7 @@ var BASE_SPEED: number = 150;
 
 // Number of pixels a sprite can be away from the center of the tile to be counted as "at the center".
 // Smaller values will likely cause bugs as creatures skip over their turns.
-var CENTER_TILE_EPSILON: number = 5;
+const CENTER_TILE_EPSILON: number = 5;
 
 // A "Creature" is a sprite that moves with and understands the grid system of the pacman game.
 export class Creature extends Phaser.Sprite {
@@ -78,6 +78,10 @@ export class Creature extends Phaser.Sprite {
             this.angle = -90;
         }
     }
+
+    update(){
+        
+    }
 }
 
 /* A DesiredDirectionCreature is a Creature that has a "desire" to
@@ -97,11 +101,10 @@ export class DesiredDirectionCreature extends Creature {
         // If we don't have a desired direction, keep on truckin
         if (this.desiredDirection == null) return;
 
-        // Distance to center of the tile. We use this to figure out when we should turn exactly.
-        var distanceToCenter: number = this.getContainingTile().distanceFromCenter(this);
 
         // If we're close to the center AND the direction that we want to go is clear, we may now turn.
-        if (distanceToCenter < 5 && this.getContainingTile().viewDirection(this.desiredDirection).isTraversable()){
+        if (this.getContainingTile().isAtCenter(this, CENTER_TILE_EPSILON)
+            && this.getContainingTile().viewDirection(this.desiredDirection).isTraversable()){
             this.centerOnTile(); // Line ourselves up perfectly to fit.
 
             //turns in the direction of move.
@@ -121,10 +124,13 @@ export class DesiredDirectionCreature extends Creature {
 
 }
 
+
 export class Pacman extends DesiredDirectionCreature {
     constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile){
         super(game, map, xtile, ytile, "pacman");
         this.faceMovementDirection = true;
+        this.scale.set(.5,.5); // This is just because our pacman image is 64x64.
+        this.animations.add('move', [0, 1, 2, 1], 10, true);
     }
 }
 
@@ -133,9 +139,6 @@ export class PlayerPacman extends Pacman {
 
     constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile){
         super(game, map, xtile, ytile);
-        this.scale.set(.5,.5);
-        this.animations.add('move', [0, 1, 2, 1], 10, true);
-
     }
 
     update(){
@@ -183,6 +186,5 @@ export class RandomGhost extends Ghost {
     update(){
         this.setDesiredDirection(map.randomDirection())
         this.attemptDesiredDirection();
-
     }
 }

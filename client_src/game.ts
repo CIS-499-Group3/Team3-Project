@@ -24,13 +24,11 @@ class PacmanGame {
     // Called by phaser to preload resources.
     preload(): void {
         this.game.load.image('badpacman', 'assets/awesomePacman.png');
-        //this.game.load.image('squarepacman', 'assets/squarepacman.png');
         this.game.load.atlasJSONHash('pacman', 'assets/pacmove.png', 'assets/pacmove.json')
         this.game.load.image('testset', 'assets/testtileset.png');
         this.game.load.atlasJSONHash('blinky', 'assets/blinkymove.png', 'assets/blinkymove.json')
         //this.game.load.image('blinky', 'assets/blinky.png')
         this.game.load.image('smalldot', 'assets/dot2.png');
-        //this.game.load.tilemap('tiled2', 'assets/titled2.csv', null, Phaser.Tilemap.CSV);
         this.game.load.tilemap('tileset', 'assets/test_map_5.csv', null, Phaser.Tilemap.CSV);
     }
 
@@ -55,10 +53,10 @@ class PacmanGame {
         //console.log('Score is ' + this.score)
         this.score = 0;
 
-        var pacMap: map.PacMap = new map.PacMap(this.tilemap);
+        let pacMap: map.PacMap = new map.PacMap(this.tilemap);
 
         // Find where pacman should spawn.
-        var pacmanSpawnTile = pacMap.getPacmanSpawns()[0];
+        let pacmanSpawnTile = pacMap.getPacmanSpawns()[0];
         console.log("Spawn tile: ", pacmanSpawnTile.getX(), pacmanSpawnTile.getY())
         this.player = new creature.PlayerPacman(this.game, pacMap, pacmanSpawnTile.getX(), pacmanSpawnTile.getY());
 
@@ -90,4 +88,4 @@ class PacmanGame {
 }
 
 
-var game: PacmanGame = new PacmanGame();
+let game: PacmanGame = new PacmanGame();
