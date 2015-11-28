@@ -4,7 +4,8 @@ var BASE_SPEED: number = 150;
 
 // Number of pixels a sprite can be away from the center of the tile to be counted as "at the center".
 // Smaller values will likely cause bugs as creatures skip over their turns.
-const CENTER_TILE_EPSILON: number = 5;
+// Values less than ~10 also seem to allow ghosts to go through walls. The mechanism behind this isn't yet clear.
+const CENTER_TILE_EPSILON: number = 10;
 
 // A "Creature" is a sprite that moves with and understands the grid system of the pacman game.
 export class Creature extends Phaser.Sprite {
@@ -28,6 +29,7 @@ export class Creature extends Phaser.Sprite {
 
     // The tile that the center of the creature is sitting in.
     public getContainingTile(): map.TileView {
+        // Since the anchor should be set to the middle to begin with, this.x and this.y should be at the center.
         return this.map.viewOfPixels(this.x, this.y);
     }
 
@@ -80,7 +82,7 @@ export class Creature extends Phaser.Sprite {
     }
 
     update(){
-        
+
     }
 }
 
