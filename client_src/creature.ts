@@ -41,7 +41,6 @@ export class Creature extends Phaser.Sprite {
 
     // Sets the direction that the sprite is currently moving.
     changeDirection(direction: map.Direction){
-
         // If this sprite turns with its movement, update the facing.
         if (this.faceMovementDirection) this.setFacing(direction);
 
@@ -65,6 +64,7 @@ export class Creature extends Phaser.Sprite {
             this.body.velocity.x = 0;
             this.body.velocity.y = 0;
         }
+        console.log("Change Direction", [this, direction, this.body.velocity.x, this.body.velocity.y]);
     }
 
     // Changes the direction that the sprite is facing.
@@ -93,7 +93,7 @@ export class Creature extends Phaser.Sprite {
  * Any subclasses will need to call this.attemptDesiredDirection(), probably in update().
  */
 export class DesiredDirectionCreature extends Creature {
-    private desiredDirection: map.Direction = null;
+    protected desiredDirection: map.Direction = null;
 
     public setDesiredDirection(direction: map.Direction){
         this.desiredDirection = direction;
@@ -186,7 +186,28 @@ export class Ghost extends DesiredDirectionCreature {
 
 export class RandomGhost extends Ghost {
     update(){
-        this.setDesiredDirection(map.randomDirection())
+        this.setDesiredDirection(map.randomDirection());
+        this.attemptDesiredDirection();
+    }
+}
+
+export class SimpleGhost extends Ghost {
+    private nextTile: map.TileView;
+    private currentDirection: map.Direction;
+    update(){
+        if (this.currentDirection == null) {
+            //console.log("Initial setup", this.currentDirection);
+            this.currentDirection = map.Direction.EAST;
+            this.setDesiredDirection(this.currentDirection);
+        }
+        this.nextTile = this.getContainingTile().viewDirection(this.currentDirection);
+        while(!this.nextTile.isTraversable()) {
+            console.log([this, this.currentDirection]);
+            this.currentDirection = map.randomDirection();
+            this.nextTile = this.getContainingTile().viewDirection(this.currentDirection);
+            this.setDesiredDirection(this.currentDirection);
+        }
+        console.log([this, this.desiredDirection, this.currentDirection, this.body.velocity.x]);
         this.attemptDesiredDirection();
     }
 }
