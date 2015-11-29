@@ -7,8 +7,11 @@ export enum TileID {
     DOT_TEST = 2,
     DOT_TILE = 3,
     TELEPORT = 4,
-    PACMAN_SPAWN = 5
-
+    PACMAN_SPAWN = 5,
+		BLINKY_SPAWN = 6,
+		PINKY_SPAWN = 7,
+		INKY_SPAWN = 8,
+		CLYDE_SPAWN = 9
 }
 
 // These tiles can be walked on by creatures.
