@@ -7,6 +7,8 @@ class PacmanGame {
     private game: Phaser.Game;
 
     private player: creature.Pacman;
+    private blinky1: creature.CornersGhost;
+    private blinky2: creature.SimpleGhost;
     private tilemap: Phaser.Tilemap;
     private smallDotMap: dot.SmallDot[];
     private teleportTiles: Phaser.Tile[];
@@ -70,8 +72,8 @@ class PacmanGame {
         // Blinky, for the deliverables.
 		let blinkySpawnTile = pacMap.getBlinkySpawns() [0];
 		let inkySpawnTile = pacMap.getInkySpawns() [0];
-        new creature.CornersGhost(this.game, pacMap, blinkySpawnTile.getX(), blinkySpawnTile.getY(), "blinky");
-        new creature.SimpleGhost(this.game, pacMap, inkySpawnTile.getX(), inkySpawnTile.getY(), "blinky");
+        this.blinky1 = new creature.CornersGhost(this.game, pacMap, blinkySpawnTile.getX(), blinkySpawnTile.getY(), "blinky");
+        this.blinky2 =new creature.SimpleGhost(this.game, pacMap, inkySpawnTile.getX(), inkySpawnTile.getY(), "blinky");
 
         //this.smallDot = new dot.SmallDot(this.game, pacMap, (10*this.tilemap.tileWidth)-160, (10*this.tilemap.tileHeight)-100);
         //console.log(this.smallDotMap);
@@ -133,6 +135,18 @@ class PacmanGame {
         this.game.physics.arcade.collide(this.player, this.layer, (s,t) => {
             console.log("Collide " + s + " " + t)
         });
+
+        //PacMan Death Collsion and Reset
+        if ((Math.abs(this.player.x - this.blinky1.x) < 20 && Math.abs(this.player.y - this.blinky1.y) < 20)) {
+            this.player.reset(304, 368)
+
+        }
+
+        if ((Math.abs(this.player.x - this.blinky2.x) < 20 && Math.abs(this.player.y - this.blinky2.y) < 20)) {
+            this.player.reset(304, 368)
+
+        }
+
     }
 
     public getDotsRemaining(): number {
