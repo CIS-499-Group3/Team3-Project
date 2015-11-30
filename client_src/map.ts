@@ -25,6 +25,11 @@ export class PacMap {
         this.tilemap = tilemap;
     }
 
+    getCorners(): TileView[] {
+        return [this.viewOf(1, 1), this.viewOf(this.getWidth()-2, 1), this.viewOf(1, this.getHeight()-2),
+            this.viewOf(this.getHeight()-2, this.getWidth()-2)]
+    }
+
     getTilemap(): Phaser.Tilemap {
         return this.tilemap;
     }
@@ -196,5 +201,9 @@ export class TileView {
     // Is an object within epsilon pixels of the center?
     isAtCenter(obj: {x: number, y: number}, epsilon: number): boolean {
         return this.distanceFromCenter(obj) < epsilon;
+    }
+
+    toString(): string{
+        return '(' + this.getX().toString() + ',' + this.getY().toString() + ')';
     }
 }

@@ -1,11 +1,12 @@
 import map = require('./map');
+import search = require('./astarsearch');
 
 var BASE_SPEED: number = 150;
 
 // Number of pixels a sprite can be away from the center of the tile to be counted as "at the center".
 // Smaller values will likely cause bugs as creatures skip over their turns.
 // Values less than ~10 also seem to allow ghosts to go through walls. The mechanism behind this isn't yet clear.
-const CENTER_TILE_EPSILON: number = 10;
+const CENTER_TILE_EPSILON: number = 5;
 
 // A "Creature" is a sprite that moves with and understands the grid system of the pacman game.
 export class Creature extends Phaser.Sprite {
@@ -27,6 +28,9 @@ export class Creature extends Phaser.Sprite {
         this.centerOnTile(); // Let's avoid start-of-game weirdness by ensuring that we're in a sane starting spot.
     }
 
+    public getMap(): map.PacMap {
+        return this.map;
+    }
     // The tile that the center of the creature is sitting in.
     public getContainingTile(): map.TileView {
         // Since the anchor should be set to the middle to begin with, this.x and this.y should be at the center.
@@ -64,7 +68,7 @@ export class Creature extends Phaser.Sprite {
             this.body.velocity.x = 0;
             this.body.velocity.y = 0;
         }
-        console.log("Change Direction", [this, direction, this.body.velocity.x, this.body.velocity.y]);
+        //console.log("Change Direction", [this, direction, this.body.velocity.x, this.body.velocity.y]);
     }
 
     // Changes the direction that the sprite is facing.
@@ -177,37 +181,195 @@ export class PlayerPacman extends Pacman {
 }
 
 export class Ghost extends DesiredDirectionCreature {
-    constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile){
-        super(game, map, xtile, ytile, "blinky");
+    constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile, key){
+        super(game, map, xtile, ytile, key);
         this.animations.add('creep', [0,1,2,3,4,5,6,7],10, true);
         this.animations.play('creep');
     }
 }
 
 export class RandomGhost extends Ghost {
+    constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile, key){
+        super(game, map, xtile, ytile, key)
+    }
     update(){
         this.setDesiredDirection(map.randomDirection());
         this.attemptDesiredDirection();
     }
 }
 
+/*
+    Class that implements a simple ghost behavior.  All this does is move in a default direction until it bumps into
+    a collision tile, then chooses a new, random, valid direction to travel in.
+
+    This class will serve as the basis for any ghosts with a behavior that needs to track whether its current direction
+    is valid.
+ */
 export class SimpleGhost extends Ghost {
-    private nextTile: map.TileView;
-    private currentDirection: map.Direction;
+    protected nextTile: map.TileView;
+    protected currentDirection: map.Direction;
+
+    constructor(game: Phaser.Game, pmap: map.PacMap, xtile, ytile, key) {
+        super(game, pmap, xtile, ytile, key);
+        this.currentDirection = map.Direction.EAST;
+        this.setDesiredDirection(this.currentDirection);
+    }
+
     update(){
-        if (this.currentDirection == null) {
-            //console.log("Initial setup", this.currentDirection);
-            this.currentDirection = map.Direction.EAST;
-            this.setDesiredDirection(this.currentDirection);
-        }
         this.nextTile = this.getContainingTile().viewDirection(this.currentDirection);
         while(!this.nextTile.isTraversable()) {
-            console.log([this, this.currentDirection]);
+            //console.log([this, this.currentDirection]);
             this.currentDirection = map.randomDirection();
             this.nextTile = this.getContainingTile().viewDirection(this.currentDirection);
             this.setDesiredDirection(this.currentDirection);
         }
-        console.log([this, this.desiredDirection, this.currentDirection, this.body.velocity.x]);
+        //console.log([this, this.desiredDirection, this.currentDirection, this.body.velocity.x]);
         this.attemptDesiredDirection();
+    }
+}
+
+/*
+ * Class that implements a slightly more sophisticated Ghost behavior.  This ghost first tries to reach the top of the
+ * map, and then scans left-to-right downwards towards the bottom of the map, then scans back to the top, ad infinitum.
+ */
+export class ScanningGhost extends SimpleGhost {
+    private scanningDown: boolean;
+
+    constructor(game: Phaser.Game, pmap: map.PacMap, xtile, ytile, key) {
+        super(game, pmap, xtile, ytile, key);
+        this.scanningDown = false;
+        this.currentDirection = map.Direction.NORTH;
+        this.setDesiredDirection(this.currentDirection);
+    }
+
+    update(){
+        this.nextTile = this.getContainingTile().viewDirection(this.currentDirection);
+        while(!this.nextTile.isTraversable()) {
+            if(this.scanningDown){
+                if(this.currentDirection === map.Direction.EAST || this.currentDirection === map.Direction.WEST){
+                    if(this.getContainingTile().viewDirection(map.Direction.SOUTH).isTraversable()){
+                        this.currentDirection = map.Direction.SOUTH;
+                        break;
+                    }
+                    else if(this.getContainingTile().viewDirection(map.Direction.NORTH).isTraversable()){
+                        this.currentDirection = map.Direction.NORTH;
+                        continue;
+                    }
+                }
+                else if(this.currentDirection === map.Direction.SOUTH || this.currentDirection === map.Direction.NORTH){
+                    if(this.currentDirection === map.Direction.SOUTH && this.getContainingTile().getY() ===
+                        this.getMap().getHeight()){
+                        this.scanningDown = false;
+                        continue;
+                    }
+                    if (this.getContainingTile().viewDirection(map.Direction.EAST).isTraversable()) {
+                        this.currentDirection = map.Direction.EAST;
+                        break;
+                    }
+                    else if (this.getContainingTile().viewDirection(map.Direction.WEST).isTraversable()) {
+                        this.currentDirection = map.Direction.WEST;
+                        continue;
+                    }
+                }
+            }
+            else {
+                if(this.currentDirection === map.Direction.EAST || this.currentDirection === map.Direction.WEST){
+                    if(this.getContainingTile().viewDirection(map.Direction.NORTH).isTraversable()){
+                        this.currentDirection = map.Direction.NORTH;
+                        break;
+                    }
+                }
+            }
+            this.currentDirection = map.randomDirection();
+        }
+        this.nextTile = this.getContainingTile().viewDirection(this.currentDirection);
+        this.setDesiredDirection(this.currentDirection);
+        this.attemptDesiredDirection();
+    }
+}
+
+export class SearchGhost extends Ghost {
+    protected goal: map.TileView;
+    protected path: map.TileView[];
+    protected nextTile: map.TileView;
+    constructor(game: Phaser.Game, pmap: map.PacMap, xtile, ytile, key) {
+        super(game, pmap, xtile, ytile, key);
+        this.goal = null;
+        this.path = [];
+        this.nextTile = null;
+    }
+
+    update(){
+        console.log('path length', this.path.length);
+        if(this.goal == null) {
+            this.setNewGoal();
+            this.setNewPath();
+        }
+        while(this.nextTile == null) {
+            console.log(this.path);
+            this.nextTile = this.path.pop();
+            //console.log(this.nextTile);
+            this.moveToNextTile();
+        }
+        this.attemptDesiredDirection();
+    }
+
+    setNewGoal(): void {
+    }
+
+    setNewPath(): void {
+        console.log('current tile', this.getContainingTile());
+        console.log('goal', this.goal);
+        this.path = search.findPathToPosition(this.getContainingTile(), this.goal);
+        console.log('path', this.path);
+    }
+
+    moveToNextTile(): void {
+        if(this.path.length > 0){
+            this.nextTile = this.path.pop();
+            var eastwest = this.nextTile.getX() - this.getContainingTile().getX();
+            if(eastwest == -1){
+                this.setDesiredDirection(map.Direction.WEST);
+            }
+            else if(eastwest == 1){
+                this.setDesiredDirection(map.Direction.EAST);
+            }
+            else {
+                var northsouth = this.nextTile.getY() - this.getContainingTile().getY();
+                if(northsouth == -1){
+                    this.setDesiredDirection(map.Direction.NORTH);
+                }
+                else
+                    this.setDesiredDirection(map.Direction.SOUTH);
+            }
+            //console.log(this.desiredDirection);
+        }
+        else{
+            this.nextTile = null;
+            this.goal = null;
+        }
+    }
+
+    attemptDesiredDirection(){
+        super.attemptDesiredDirection();
+        if(this.getContainingTile().getTile() == this.nextTile.getTile()){
+            this.moveToNextTile();
+        }
+    }
+}
+
+export class CornersGhost extends SearchGhost {
+    private corners: number[];
+    private count: number;
+    constructor(game: Phaser.Game, pmap: map.PacMap, xtile, ytile, key){
+        super(game, pmap, xtile, ytile, key);
+        this.corners = [1, 3, 0, 2];
+        this.count = 0;
+    }
+
+    setNewGoal(): void {
+        console.log(this);
+        this.goal = this.getMap().getCorners()[this.corners[this.count % 4]];
+        this.count = this.count + 1;
     }
 }
