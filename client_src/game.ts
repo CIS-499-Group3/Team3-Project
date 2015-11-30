@@ -9,7 +9,9 @@ class PacmanGame {
     private player: creature.Pacman;
     private tilemap: Phaser.Tilemap;
     private smallDotMap: dot.SmallDot[];
+    private teleportTiles: map.TileView[];
     private layer: Phaser.TilemapLayer;
+    private tLayer: Phaser.TilemapLayer;
 
     public score: number;
     private scoreText;
@@ -30,7 +32,7 @@ class PacmanGame {
         this.game.load.atlasJSONHash('blinky', 'assets/blinkymove.png', 'assets/blinkymove.json')
         //this.game.load.image('blinky', 'assets/blinky.png')
         this.game.load.image('smalldot', 'assets/dot2.png');
-        this.game.load.tilemap('tileset', 'assets/test_map_5.csv', null, Phaser.Tilemap.CSV);
+        this.game.load.tilemap('tileset', 'assets/original_pacman_map.csv', null, Phaser.Tilemap.CSV);
     }
 
 
@@ -42,19 +44,22 @@ class PacmanGame {
         //this.tilemap.create('layer', 20, 20, 32 ,32);
         //this.tilemap.putTile(1,4,4);
 
-        this.layer = this.tilemap.createLayer('layer')
+        this.layer = this.tilemap.createLayer('layer');
+        this.tLayer = this.tilemap.createLayer('layer');
+        this.tLayer.visible = false;
         this.tilemap.addTilesetImage('testset');
 
 
         this.tilemap.setCollision(1, true, this.layer);
-        this.tilemap.setCollision([0,2,3,4,5], false, this.layer); // Set floors to not collide.
+        this.tilemap.setCollision(4, true, this.tLayer);
+        this.tilemap.setCollision([0,2,3,5], false, this.layer); // Set floors to not collide.
 
         // Oddly enough, the 'score' value in the constructor doesn't hold and I don't know why.
         // Try it out:
-        //console.log('Score is ' + this.score)
+        console.log('Score is ' + this.score)
         this.score = 0;
 
-        let pacMap: map.PacMap = new map.PacMap(this.tilemap);
+        var pacMap: map.PacMap = new map.PacMap(this.tilemap);
 
         // Find where pacman should spawn.
         let pacmanSpawnTile = pacMap.getPacmanSpawns()[0];
@@ -67,6 +72,8 @@ class PacmanGame {
 
         //this.smallDot = new dot.SmallDot(this.game, pacMap, (10*this.tilemap.tileWidth)-160, (10*this.tilemap.tileHeight)-100);
         //console.log(this.smallDotMap);
+
+        //Initialize the list of dots from the map data.
         this.smallDotMap = [];
         var dotTiles = pacMap.allTilesWithID(map.TileID.DOT_TILE);
         for (var i=0; i<dotTiles.length; i++){
@@ -75,6 +82,10 @@ class PacmanGame {
             this.smallDotMap.push(new dot.SmallDot(this.game, pacMap, x, y));
         }
         console.log(this.smallDotMap);
+
+        //Initialize the list of Teleport Tiles
+        this.teleportTiles = pacMap.allTilesWithID(map.TileID.TELEPORT);
+        console.log(this.teleportTiles);
 
         //The score
         this.scoreText = this.game.add.text((20*this.tilemap.tileWidth), (this.tilemap.tileHeight), 'Score:0', { fontSize: '32px', fill: '#0000FF' });
@@ -92,6 +103,13 @@ class PacmanGame {
             });
         }
 
+        //teleport tile collision
+        this.game.physics.arcade.collide(this.player, this.tLayer, (pac, tile) => {
+            this.player.x = this.teleportTiles[1].getCenterX();
+            this.player.y = this.teleportTiles[1].getCenterY();
+        });
+
+        //normal collision
         this.game.physics.arcade.collide(this.player, this.layer);
         this.game.physics.arcade.collide(this.player, this.layer, (s,t) => {
             console.log("Collide " + s + " " + t)

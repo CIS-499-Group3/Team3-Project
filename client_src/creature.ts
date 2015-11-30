@@ -300,7 +300,7 @@ export class SearchGhost extends Ghost {
     }
 
     update(){
-        console.log('path length', this.path.length);
+        //console.log('path length', this.path.length);
         if(this.goal == null) {
             this.setNewGoal();
             this.setNewPath();
