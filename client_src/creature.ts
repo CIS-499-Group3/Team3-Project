@@ -306,7 +306,7 @@ export class SearchGhost extends Ghost {
             this.setNewPath();
         }
         while(this.nextTile == null) {
-            console.log(this.path);
+            //console.log(this.path);
             this.nextTile = this.path.pop();
             //console.log(this.nextTile);
             this.moveToNextTile();
@@ -318,10 +318,10 @@ export class SearchGhost extends Ghost {
     }
 
     setNewPath(): void {
-        console.log('current tile', this.getContainingTile());
-        console.log('goal', this.goal);
+        //console.log('current tile', this.getContainingTile());
+        //console.log('goal', this.goal);
         this.path = search.findPathToPosition(this.getContainingTile(), this.goal);
-        console.log('path', this.path);
+        //console.log('path', this.path);
     }
 
     moveToNextTile(): void {
@@ -368,7 +368,7 @@ export class CornersGhost extends SearchGhost {
     }
 
     setNewGoal(): void {
-        console.log(this);
+        //console.log(this);
         this.goal = this.getMap().getCorners()[this.corners[this.count % 4]];
         this.count = this.count + 1;
     }
