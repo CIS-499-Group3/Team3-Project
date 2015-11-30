@@ -9,9 +9,8 @@ class PacmanGame {
     private player: creature.Pacman;
     private tilemap: Phaser.Tilemap;
     private smallDotMap: dot.SmallDot[];
-    private teleportTiles: map.TileView[];
+    private teleportTiles: Phaser.Tile[];
     private layer: Phaser.TilemapLayer;
-    private tLayer: Phaser.TilemapLayer;
 
     public score: number;
     private scoreText;
@@ -45,18 +44,15 @@ class PacmanGame {
         //this.tilemap.putTile(1,4,4);
 
         this.layer = this.tilemap.createLayer('layer');
-        this.tLayer = this.tilemap.createLayer('layer');
-        this.tLayer.visible = false;
         this.tilemap.addTilesetImage('testset');
 
 
         this.tilemap.setCollision(1, true, this.layer);
-        this.tilemap.setCollision(4, true, this.tLayer);
         this.tilemap.setCollision([0,2,3,5], false, this.layer); // Set floors to not collide.
 
         // Oddly enough, the 'score' value in the constructor doesn't hold and I don't know why.
         // Try it out:
-        console.log('Score is ' + this.score)
+        //console.log('Score is ' + this.score);
         this.score = 0;
 
         var pacMap: map.PacMap = new map.PacMap(this.tilemap);
@@ -84,7 +80,25 @@ class PacmanGame {
         console.log(this.smallDotMap);
 
         //Initialize the list of Teleport Tiles
-        this.teleportTiles = pacMap.allTilesWithID(map.TileID.TELEPORT);
+        this.teleportTiles = [];
+        let tTiles = pacMap.allTilesWithID(map.TileID.TELEPORT);
+        for (var i=0; i<tTiles.length; i++)
+            this.teleportTiles.push(tTiles[i].getTile());
+
+        //Set the special rules for teleport tiles.
+        pacMap.getTilemap().setTileIndexCallback(4, (creature, tile) => {
+            let destination = this.teleportTiles[(this.teleportTiles.indexOf(tile)+1)%this.teleportTiles.length];
+            this.player.x = this.player.getMap().viewOf(destination.x, destination.y).getCenterX();
+            this.player.y = this.player.getMap().viewOf(destination.x, destination.y).getCenterY();
+            if (this.player.getContainingTile().getTile().x == 0)
+                this.player.x = this.player.getContainingTile().viewEast().getCenterX();
+            if (this.player.getContainingTile().getTile().x == this.tilemap.width-1)
+                this.player.x = this.player.getContainingTile().viewWest().getCenterX();
+            if (this.player.getContainingTile().getTile().y == 0)
+                this.player.x = this.player.getContainingTile().viewSouth().getCenterY();
+            if (this.player.getContainingTile().getTile().y == this.tilemap.height-1)
+                this.player.x = this.player.getContainingTile().viewWest().getCenterY();
+        }, this);
         console.log(this.teleportTiles);
 
         //The score
@@ -102,12 +116,6 @@ class PacmanGame {
                 this.scoreText.text = 'Score:' + this.score;
             });
         }
-
-        //teleport tile collision
-        this.game.physics.arcade.collide(this.player, this.tLayer, (pac, tile) => {
-            this.player.x = this.teleportTiles[1].getCenterX();
-            this.player.y = this.teleportTiles[1].getCenterY();
-        });
 
         //normal collision
         this.game.physics.arcade.collide(this.player, this.layer);
