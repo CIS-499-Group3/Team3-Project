@@ -88,6 +88,15 @@ export class Creature extends Phaser.Sprite {
     update(){
 
     }
+
+    public explode(imagename: string){
+        var emitter = this.game.add.emitter(this.x, this.y, 50);
+        emitter.makeParticles(imagename);
+        emitter.gravity = 0;
+        emitter.start(true, 1000, null, 10);
+        this.game.events.add(2000, () => emitter.destroy());
+        //emitter.destroy();
+    }
 }
 
 /* A DesiredDirectionCreature is a Creature that has a "desire" to

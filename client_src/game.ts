@@ -20,12 +20,8 @@ class PacmanGame {
         this.game = new Phaser.Game(800, 800, Phaser.AUTO, 'game-div', this);
         this.score = 0;
         this.smallDotMap = [];
-        
     }
     
-    
-    
-
     // Called by phaser to preload resources.
     preload(): void {
         
@@ -36,6 +32,7 @@ class PacmanGame {
         //this.game.load.image('blinky', 'assets/blinky.png')
         this.game.load.image('smalldot', 'assets/dot2.png');
         this.game.load.tilemap('tileset', 'assets/original_pacman_map.csv', null, Phaser.Tilemap.CSV);
+        this.game.load.image('pacmanchunk', 'assets/pacman_chunk.png');
     }
 
 
@@ -64,7 +61,6 @@ class PacmanGame {
 
         // Find where pacman should spawn.
         let pacmanSpawnTile = pacMap.getPacmanSpawns()[0];
-        console.log("Spawn tile: ", pacmanSpawnTile.getX(), pacmanSpawnTile.getY())
         this.player = new creature.PlayerPacman(this.game, pacMap, pacmanSpawnTile.getX(), pacmanSpawnTile.getY());
         
         // Blinky, for the deliverables.
@@ -92,6 +88,7 @@ class PacmanGame {
 
         //Set the special rules for teleport tiles.
         pacMap.getTilemap().setTileIndexCallback(4, (creature, tile) => {
+            creature.explode('pacmanchunk');
             let destination = this.teleportTiles[(this.teleportTiles.indexOf(tile)+1)%this.teleportTiles.length];
             this.player.x = this.player.getMap().viewOf(destination.x, destination.y).getCenterX();
             this.player.y = this.player.getMap().viewOf(destination.x, destination.y).getCenterY();
@@ -109,10 +106,6 @@ class PacmanGame {
         //The score
         this.scoreText = this.game.add.text((20*this.tilemap.tileWidth), (this.tilemap.tileHeight), 'Score:0', { fontSize: '32px', fill: '#0000FF' });
     }
-    
-    //qq(): void {}
-    //public qq = function () {};
-    
     
     // Called by phaser once per tick to update the game world.
     public update(): void {
@@ -133,6 +126,7 @@ class PacmanGame {
         });
     }
 
+    // How many dots are left on this map?
     public getDotsRemaining(): number {
         var count: number = 0;
         for (var dot of this.smallDotMap){
@@ -143,8 +137,10 @@ class PacmanGame {
         return count;
     }
 
-
-    
+    // Called when the game has been won.
+    private onWin(): void {
+        console.log("Game won!");
+    }
 }
 
 
