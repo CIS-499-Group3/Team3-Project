@@ -7,7 +7,9 @@ import map = require('./map');
     private map: map.PacMap;
      constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile, key: string) {
 
-        super(game, xtile, ytile, key); // Call the "Sprite" constructor.
+         super(game, xtile, ytile, key); // Call the "Sprite" constructor.
+         this.anchor = new Phaser.Point(0.5, 0.5); // Set the 'origin' of the sprite to the center of it.
+
         this.map = map;
         game.physics.enable(this, Phaser.Physics.ARCADE); // Turn on basic arcade physics for dots.
         game.add.existing(this); // Adds dots to the game.

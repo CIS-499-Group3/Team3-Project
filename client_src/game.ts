@@ -70,10 +70,12 @@ class PacmanGame {
         this.player = new creature.PlayerPacman(this.game, pacMap, pacmanSpawnTile.getX(), pacmanSpawnTile.getY());
         
         // Blinky, for the deliverables.
-		let blinkySpawnTile = pacMap.getBlinkySpawns() [0];
-		let inkySpawnTile = pacMap.getInkySpawns() [0];
+	let blinkySpawnTile = pacMap.getBlinkySpawns() [0];
+	let inkySpawnTile = pacMap.getInkySpawns() [0];
         this.blinky1 = new creature.CornersGhost(this.game, pacMap, blinkySpawnTile.getX(), blinkySpawnTile.getY(), "blinky");
-        this.blinky2 =new creature.SimpleGhost(this.game, pacMap, inkySpawnTile.getX(), inkySpawnTile.getY(), "blinky");
+        this.blinky2 = new creature.SimpleGhost(this.game, pacMap, inkySpawnTile.getX(), inkySpawnTile.getY(), "blinky");
+        this.blinky1.body.immovable = true;
+        this.blinky2.body.immovable = true;
 
         //this.smallDot = new dot.SmallDot(this.game, pacMap, (10*this.tilemap.tileWidth)-160, (10*this.tilemap.tileHeight)-100);
         //console.log(this.smallDotMap);
@@ -91,8 +93,9 @@ class PacmanGame {
         //Initialize the list of Teleport Tiles
         this.teleportTiles = [];
         let tTiles = pacMap.allTilesWithID(map.TileID.TELEPORT);
-        for (var i=0; i<tTiles.length; i++)
+        for (var i=0; i<tTiles.length; i++){
             this.teleportTiles.push(tTiles[i].getTile());
+        }
 
         //Set the special rules for teleport tiles.
         pacMap.getTilemap().setTileIndexCallback(4, (creature, tile) => {
@@ -109,7 +112,6 @@ class PacmanGame {
             if (this.player.getContainingTile().getTile().y == this.tilemap.height-1)
                 this.player.x = this.player.getContainingTile().viewWest().getCenterY();
         }, this);
-        console.log(this.teleportTiles);
 
         //The score
         this.scoreText = this.game.add.text((20*this.tilemap.tileWidth), (this.tilemap.tileHeight), 'Score:0', { fontSize: '32px', fill: '#0000FF' });
@@ -134,16 +136,18 @@ class PacmanGame {
         });
 
         //PacMan Death Collsion and Reset
-        if ((Math.abs(this.player.x - this.blinky1.x) < 20 && Math.abs(this.player.y - this.blinky1.y) < 20)) {
+        this.game.physics.arcade.collide(this.player, this.blinky1, (s, t) => {
             this.respawnPlayer();
+        });
 
-        }
-
-        if ((Math.abs(this.player.x - this.blinky2.x) < 20 && Math.abs(this.player.y - this.blinky2.y) < 20)) {
+        this.game.physics.arcade.collide(this.player, this.blinky2, (s, t) => {
             this.respawnPlayer();
+        });
+            
 
-        }
+       
 
+     
     }
 
     // How many dots are left on this map?
