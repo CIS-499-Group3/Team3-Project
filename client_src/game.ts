@@ -17,14 +17,18 @@ class PacmanGame {
 
     constructor() {
         console.log("Yo!");
-        this.game = new Phaser.Game(800, 800, Phaser.AUTO, 'game-div', { preload: this.preload, create: this.create, update: this.update});
+        this.game = new Phaser.Game(800, 800, Phaser.AUTO, 'game-div', this);
         this.score = 0;
         this.smallDotMap = [];
+        
     }
-
+    
+    
+    
 
     // Called by phaser to preload resources.
     preload(): void {
+        
         this.game.load.image('badpacman', 'assets/awesomePacman.png');
         this.game.load.atlasJSONHash('pacman', 'assets/pacmove.png', 'assets/pacmove.json')
         this.game.load.image('testset', 'assets/testtileset.png');
@@ -38,6 +42,7 @@ class PacmanGame {
 
     // Called by phaser to set up the game world.
     create(): void {
+        console.log(this)
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.tilemap = this.game.add.tilemap('tileset');
         //this.tilemap.create('layer', 20, 20, 32 ,32);
@@ -61,7 +66,7 @@ class PacmanGame {
         let pacmanSpawnTile = pacMap.getPacmanSpawns()[0];
         console.log("Spawn tile: ", pacmanSpawnTile.getX(), pacmanSpawnTile.getY())
         this.player = new creature.PlayerPacman(this.game, pacMap, pacmanSpawnTile.getX(), pacmanSpawnTile.getY());
-
+        
         // Blinky, for the deliverables.
         new creature.CornersGhost(this.game, pacMap, 1, 2, "blinky");
         new creature.SimpleGhost(this.game, pacMap, 1, 1, "blinky");
@@ -104,14 +109,18 @@ class PacmanGame {
         //The score
         this.scoreText = this.game.add.text((20*this.tilemap.tileWidth), (this.tilemap.tileHeight), 'Score:0', { fontSize: '32px', fill: '#0000FF' });
     }
-
+    
+    //qq(): void {}
+    //public qq = function () {};
+    
+    
     // Called by phaser once per tick to update the game world.
-    update(): void {
+    public update(): void {
         //dot collision
         for(var i=0; i<this.smallDotMap.length; i++) {
             this.game.physics.arcade.overlap(this.player, this.smallDotMap[i], (creature, dot) => {
                 this.smallDotMap[i].destroy();
-                //console.log(this.game)
+                console.log(this.getDotsRemaining());
                 this.score += 5;
                 this.scoreText.text = 'Score:' + this.score;
             });
@@ -123,6 +132,19 @@ class PacmanGame {
             console.log("Collide " + s + " " + t)
         });
     }
+
+    public getDotsRemaining(): number {
+        var count: number = 0;
+        for (var dot of this.smallDotMap){
+            if (dot.alive) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+
+    
 }
 
 
