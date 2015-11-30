@@ -18,12 +18,15 @@ class PacmanGame {
     private map: map.PacMap;
 
     public score: number;
+    public lives: number;
     private scoreText;
+    private livesText;
 
     constructor() {
         console.log("Yo!");
         this.game = new Phaser.Game(800, 800, Phaser.AUTO, 'game-div', this);
         this.score = 0;
+        this.lives = 3;
         this.smallDotMap = [];
     }
     
@@ -83,18 +86,17 @@ class PacmanGame {
         //Initialize the list of dots from the map data.
         this.smallDotMap = [];
         var dotTiles = pacMap.allTilesWithID(map.TileID.FLOOR);
-        for (var i=0; i<dotTiles.length; i++){
-            var x = dotTiles[i].getCenterX();
-            var y = dotTiles[i].getCenterY();
+        for (var d of dotTiles){
+            var x = d.getCenterX();
+            var y = d.getCenterY();
             this.smallDotMap.push(new dot.SmallDot(this.game, pacMap, x, y));
         }
-        console.log(this.smallDotMap);
 
         //Initialize the list of Teleport Tiles
         this.teleportTiles = [];
         let tTiles = pacMap.allTilesWithID(map.TileID.TELEPORT);
-        for (var i=0; i<tTiles.length; i++){
-            this.teleportTiles.push(tTiles[i].getTile());
+        for (var tile of tTiles){
+            this.teleportTiles.push(tile.getTile());
         }
 
         //Set the special rules for teleport tiles.
@@ -115,17 +117,19 @@ class PacmanGame {
 
         //The score
         this.scoreText = this.game.add.text((20*this.tilemap.tileWidth), (this.tilemap.tileHeight), 'Score:0', { fontSize: '32px', fill: '#0000FF' });
+        this.livesText = this.game.add.text((20*this.tilemap.tileWidth), (this.tilemap.tileHeight + 40), 'AAA', { fontSize: '32px', fill: '#0000FF' });
+        this.updateLivesText();
     }
     
     // Called by phaser once per tick to update the game world.
     public update(): void {
         //dot collision
-        for(var i=0; i<this.smallDotMap.length; i++) {
-            this.game.physics.arcade.overlap(this.player, this.smallDotMap[i], (creature, dot) => {
-                this.smallDotMap[i].destroy();
+        for (var dot of this.smallDotMap) {
+            this.game.physics.arcade.overlap(this.player, dot, (creature, dot) => {
+                dot.destroy();
                 console.log(this.getDotsRemaining());
                 this.score += 5;
-                this.scoreText.text = 'Score:' + this.score;
+                this.updateScoreText();
             });
         }
 
@@ -137,16 +141,12 @@ class PacmanGame {
 
         //PacMan Death Collsion and Reset
         this.game.physics.arcade.collide(this.player, this.blinky1, (s, t) => {
-            this.respawnPlayer();
+            this.killPlayer();
         });
 
         this.game.physics.arcade.collide(this.player, this.blinky2, (s, t) => {
-            this.respawnPlayer();
+            this.killPlayer();
         });
-            
-
-       
-
      
     }
 
@@ -169,6 +169,24 @@ class PacmanGame {
     private respawnPlayer(): void {
         let pacmanSpawn = util.randomChoice(this.map.getPacmanSpawns());
         this.player.moveToTile(pacmanSpawn);
+    }
+
+    private updateScoreText(){
+        this.scoreText.text = 'Score: ' + this.score;
+    }
+
+    private updateLivesText(){
+        this.livesText.text = 'Lives: ' + this.lives;
+    }
+
+    private removeLife(){
+        this.lives--;
+        this.updateLivesText();
+    }
+
+    private killPlayer(){
+        this.removeLife();
+        this.respawnPlayer();
     }
 }
 
