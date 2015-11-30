@@ -10,7 +10,6 @@ class PacmanGame {
     private player: creature.Pacman;
     private blinky1: creature.CornersGhost;
     private blinky2: creature.SimpleGhost;
-    private tilemap: Phaser.Tilemap;
     private smallDotMap: dot.SmallDot[];
     private teleportTiles: Phaser.Tile[];
     private layer: Phaser.TilemapLayer;
@@ -49,23 +48,23 @@ class PacmanGame {
     create(): void {
         console.log(this)
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
-        this.tilemap = this.game.add.tilemap('tileset');
+        let tilemap = this.game.add.tilemap('tileset');
         //this.tilemap.create('layer', 20, 20, 32 ,32);
         //this.tilemap.putTile(1,4,4);
 
-        this.layer = this.tilemap.createLayer('layer');
-        this.tilemap.addTilesetImage('testset');
+        this.layer = tilemap.createLayer('layer');
+        tilemap.addTilesetImage('testset');
 
 
-        this.tilemap.setCollision(1, true, this.layer);
-        this.tilemap.setCollision([0,2,3,5], false, this.layer); // Set floors to not collide.
+        tilemap.setCollision(1, true, this.layer);
+        tilemap.setCollision([0,2,3,5], false, this.layer); // Set floors to not collide.
 
         // Oddly enough, the 'score' value in the constructor doesn't hold and I don't know why.
         // Try it out:
         //console.log('Score is ' + this.score);
         this.score = 0;
 
-        var pacMap: map.PacMap = new map.PacMap(this.tilemap);
+        var pacMap: map.PacMap = new map.PacMap(tilemap);
         this.map = pacMap;
 
         // Find where pacman should spawn.
@@ -100,24 +99,24 @@ class PacmanGame {
         }
 
         //Set the special rules for teleport tiles.
-        pacMap.getTilemap().setTileIndexCallback(4, (creature, tile) => {
+        pacMap.getTilemap().setTileIndexCallback(map.TileID.TELEPORT, (creature, tile) => {
             creature.explode('pacmanchunk');
             let destination = this.teleportTiles[(this.teleportTiles.indexOf(tile)+1)%this.teleportTiles.length];
             this.player.x = this.player.getMap().viewOf(destination.x, destination.y).getCenterX();
             this.player.y = this.player.getMap().viewOf(destination.x, destination.y).getCenterY();
             if (this.player.getContainingTile().getTile().x == 0)
                 this.player.x = this.player.getContainingTile().viewEast().getCenterX();
-            if (this.player.getContainingTile().getTile().x == this.tilemap.width-1)
+            if (this.player.getContainingTile().getTile().x == tilemap.width-1)
                 this.player.x = this.player.getContainingTile().viewWest().getCenterX();
             if (this.player.getContainingTile().getTile().y == 0)
                 this.player.x = this.player.getContainingTile().viewSouth().getCenterY();
-            if (this.player.getContainingTile().getTile().y == this.tilemap.height-1)
+            if (this.player.getContainingTile().getTile().y == tilemap.height-1)
                 this.player.x = this.player.getContainingTile().viewWest().getCenterY();
         }, this);
 
         //The score
-        this.scoreText = this.game.add.text((20*this.tilemap.tileWidth), (this.tilemap.tileHeight), 'Score:0', { fontSize: '32px', fill: '#0000FF' });
-        this.livesText = this.game.add.text((20*this.tilemap.tileWidth), (this.tilemap.tileHeight + 40), 'AAA', { fontSize: '32px', fill: '#0000FF' });
+        this.scoreText = this.game.add.text((20*tilemap.tileWidth), (tilemap.tileHeight), 'Score:0', { fontSize: '32px', fill: '#0000FF' });
+        this.livesText = this.game.add.text((20*tilemap.tileWidth), (tilemap.tileHeight + 40), 'AAA', { fontSize: '32px', fill: '#0000FF' });
         this.updateLivesText();
     }
     
@@ -127,9 +126,12 @@ class PacmanGame {
         for (var dot of this.smallDotMap) {
             this.game.physics.arcade.overlap(this.player, dot, (creature, dot) => {
                 dot.destroy();
-                console.log(this.getDotsRemaining());
                 this.score += 5;
                 this.updateScoreText();
+
+                if (this.getDotsRemaining() === 0){
+                    this.onWin();
+                }
             });
         }
 
@@ -147,6 +149,10 @@ class PacmanGame {
         this.game.physics.arcade.collide(this.player, this.blinky2, (s, t) => {
             this.killPlayer();
         });
+
+        if (this.lives < 0) {
+            this.onLose();
+        }
      
     }
 
@@ -163,7 +169,11 @@ class PacmanGame {
 
     // Called when the game has been won.
     private onWin(): void {
-        console.log("Game won!");
+        alert("Game won!");
+    }
+
+    private onLose(): void {
+        window.location.pathname = "lose.html";
     }
 
     private respawnPlayer(): void {
