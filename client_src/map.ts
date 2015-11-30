@@ -74,7 +74,18 @@ export class PacMap {
 
         return matchingTiles;
     }
-
+	getBlinkySpawns(): TileView[] {
+			return this.allTilesWithID(TileID.BLINKY_SPAWN);
+	}
+	getInkySpawns(): TileView[] {
+			return this.allTilesWithID(TileID.INKY_SPAWN);
+	}
+	getPinkySpawns(): TileView[] {
+			return this.allTilesWithID(TileID.PINKY_SPAWN);
+	}
+	getClydeSpawns(): TileView[] {
+			return this.allTilesWithID(TileID.CLYDE_SPAWN);
+	}
     getPacmanSpawns(): TileView[] {
         return this.allTilesWithID(TileID.PACMAN_SPAWN);
     }
