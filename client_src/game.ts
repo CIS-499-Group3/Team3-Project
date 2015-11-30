@@ -45,8 +45,8 @@ class PacmanGame {
         this.tilemap.addTilesetImage('testset');
 
 
-        this.tilemap.setCollision([1,2], true, this.layer);
-        this.tilemap.setCollision(0,false, this.layer); // Set floors to not collide.
+        this.tilemap.setCollision(1, true, this.layer);
+        this.tilemap.setCollision([0,2,3,4,5], false, this.layer); // Set floors to not collide.
 
         // Oddly enough, the 'score' value in the constructor doesn't hold and I don't know why.
         // Try it out:
@@ -76,7 +76,7 @@ class PacmanGame {
         this.game.physics.arcade.overlap(this.player, this.smallDot, (creature, dot) => {
             this.smallDot.destroy();
             //console.log(this.game)
-            this.score += 42;
+            this.score += 5;
             this.scoreText.text = 'Score:' + this.score;
         });
 

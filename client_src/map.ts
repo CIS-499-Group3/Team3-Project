@@ -15,7 +15,7 @@ export enum TileID {
 }
 
 // These tiles can be walked on by creatures.
-var TRAVERSABLE_TILES = [TileID.FLOOR]
+var TRAVERSABLE_TILES = [TileID.FLOOR, TileID.DOT_TEST, TileID.DOT_TILE, TileID.PACMAN_SPAWN]
 
 // A Pacman map. Mostly just a wrapper over tilemap that understands some pacman logic.
 
