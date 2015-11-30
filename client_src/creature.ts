@@ -94,7 +94,7 @@ export class Creature extends Phaser.Sprite {
 
     }
 
-    public explode(imagename: string){
+    public explode(imagename: string, chunks: number =10){
         //var image = new Phaser.Image(this.game, 0, 0, imagename, 0)
         
         //if (!imagename){
@@ -103,7 +103,7 @@ export class Creature extends Phaser.Sprite {
         var emitter = this.game.add.emitter(this.x, this.y, 50);
         emitter.makeParticles(imagename);
         emitter.gravity = 0;
-        emitter.start(true, 1000, null, 10);
+        emitter.start(true, 1000, null, chunks);
         this.game.time.events.add(2000, () => emitter.destroy());
         //emitter.destroy();
     }
