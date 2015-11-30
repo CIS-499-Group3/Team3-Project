@@ -27,7 +27,7 @@ class PacmanGame {
     preload(): void {
         this.game.load.image('badpacman', 'assets/awesomePacman.png');
         this.game.load.atlasJSONHash('pacman', 'assets/pacmove.png', 'assets/pacmove.json')
-        this.game.load.image('testset', 'assets/testtileset2.png');
+        this.game.load.image('testset', 'assets/testtileset.png');
         this.game.load.atlasJSONHash('blinky', 'assets/blinkymove.png', 'assets/blinkymove.json')
         //this.game.load.image('blinky', 'assets/blinky.png')
         this.game.load.image('smalldot', 'assets/dot2.png');
@@ -71,7 +71,7 @@ class PacmanGame {
 
         //Initialize the list of dots from the map data.
         this.smallDotMap = [];
-        var dotTiles = pacMap.allTilesWithID(map.TileID.DOT_TILE);
+        var dotTiles = pacMap.allTilesWithID(map.TileID.FLOOR);
         for (var i=0; i<dotTiles.length; i++){
             var x = dotTiles[i].getCenterX();
             var y = dotTiles[i].getCenterY();
