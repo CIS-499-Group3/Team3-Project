@@ -2,6 +2,7 @@
 import creature = require('./creature');
 import map = require('./map');
 import dot = require('./dot');
+import util = require('./util');
 
 class PacmanGame {
     private game: Phaser.Game;
@@ -13,6 +14,8 @@ class PacmanGame {
     private smallDotMap: dot.SmallDot[];
     private teleportTiles: Phaser.Tile[];
     private layer: Phaser.TilemapLayer;
+
+    private map: map.PacMap;
 
     public score: number;
     private scoreText;
@@ -60,9 +63,10 @@ class PacmanGame {
         this.score = 0;
 
         var pacMap: map.PacMap = new map.PacMap(this.tilemap);
+        this.map = pacMap;
 
         // Find where pacman should spawn.
-        let pacmanSpawnTile = pacMap.getPacmanSpawns()[0];
+        let pacmanSpawnTile = util.randomChoice(pacMap.getPacmanSpawns());
         this.player = new creature.PlayerPacman(this.game, pacMap, pacmanSpawnTile.getX(), pacmanSpawnTile.getY());
         
         // Blinky, for the deliverables.
@@ -131,12 +135,12 @@ class PacmanGame {
 
         //PacMan Death Collsion and Reset
         if ((Math.abs(this.player.x - this.blinky1.x) < 20 && Math.abs(this.player.y - this.blinky1.y) < 20)) {
-            this.player.reset(304, 368)
+            this.respawnPlayer();
 
         }
 
         if ((Math.abs(this.player.x - this.blinky2.x) < 20 && Math.abs(this.player.y - this.blinky2.y) < 20)) {
-            this.player.reset(304, 368)
+            this.respawnPlayer();
 
         }
 
@@ -156,6 +160,11 @@ class PacmanGame {
     // Called when the game has been won.
     private onWin(): void {
         console.log("Game won!");
+    }
+
+    private respawnPlayer(): void {
+        let pacmanSpawn = util.randomChoice(this.map.getPacmanSpawns());
+        this.player.moveToTile(pacmanSpawn);
     }
 }
 

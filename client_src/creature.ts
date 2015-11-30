@@ -43,6 +43,11 @@ export class Creature extends Phaser.Sprite {
         this.y = this.getContainingTile().getCenterY();
     }
 
+    moveToTile(tile: map.TileView){
+        this.x = tile.getCenterX();
+        this.y = tile.getCenterY();
+    }
+
     // Sets the direction that the sprite is currently moving.
     changeDirection(direction: map.Direction){
         // If this sprite turns with its movement, update the facing.
@@ -90,13 +95,22 @@ export class Creature extends Phaser.Sprite {
     }
 
     public explode(imagename: string){
+        //var image = new Phaser.Image(this.game, 0, 0, imagename, 0)
+        
+        //if (!imagename){
+        //    
+        //}
         var emitter = this.game.add.emitter(this.x, this.y, 50);
         emitter.makeParticles(imagename);
         emitter.gravity = 0;
         emitter.start(true, 1000, null, 10);
-        this.game.events.add(2000, () => emitter.destroy());
+        this.game.time.events.add(2000, () => emitter.destroy());
         //emitter.destroy();
     }
+
+    
+
+    
 }
 
 /* A DesiredDirectionCreature is a Creature that has a "desire" to
