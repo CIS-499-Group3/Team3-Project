@@ -33,15 +33,14 @@
     "test",
     "tests"
   ],
-  "version": "2.4.3",
-  "_release": "2.4.3",
+  "version": "2.4.4",
+  "_release": "2.4.4",
   "_resolution": {
     "type": "version",
-    "tag": "v2.4.3",
-    "commit": "486c15f16fd7c2f154d55cb0239fa0dbdeaed1f8"
+    "tag": "v2.4.4",
+    "commit": "c9c85330ab60547b39ba4c9400c258ed7fb2a317"
   },
   "_source": "git://github.com/photonstorm/phaser.git",
   "_target": "~2.4.3",
-  "_originalSource": "phaser",
-  "_direct": true
+  "_originalSource": "phaser"
 }

@@ -539,7 +539,7 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
         blendSwap = currentBlendMode !== nextBlendMode;
         shaderSwap = currentShader !== nextShader; // should I use _UIDS???
 
-        if (currentBaseTexture !== nextTexture || blendSwap || shaderSwap)
+        if ((currentBaseTexture !== nextTexture && !nextTexture.skipRender) || blendSwap || shaderSwap)
         {
             this.renderBatch(currentBaseTexture, batchSize, start);
 
@@ -618,7 +618,11 @@ PIXI.WebGLSpriteBatch.prototype.renderBatch = function(texture, size, startIndex
     // check if a texture is dirty..
     if (texture._dirty[gl.id])
     {
-        this.renderSession.renderer.updateTexture(texture);
+        if (!this.renderSession.renderer.updateTexture(texture))
+        {
+            //  If updateTexture returns false then we cannot render it, so bail out now
+            return;
+        }
     }
     else
     {

@@ -12,11 +12,11 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 
 * **Visit:** The [Phaser website](http://phaser.io) and follow on [Twitter](https://twitter.com/photonstorm) (#phaserjs)
 * **Learn:** [API Documentation](http://phaser.io/docs), [Support Forum][forum] and [StackOverflow](http://stackoverflow.com/questions/tagged/phaser-framework)
-* **Code:** 550+ [Source Examples](http://phaser.io/examples) (also available in this [git repo][examples])
+* **Code:** 700+ [Source Examples](http://phaser.io/examples) (also available in this [git repo][examples])
 * **Read:** Subscribe to the [Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E) and grab our [Phaser Books](http://phaser.io/shop)
-* **Chat:** [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) on freenode
-* **Extend:** With [Phaser Plugins](https://github.com/photonstorm/phaser-plugins)
-* **Be awesome:** Support the future of Phaser on [Patreon](https://www.patreon.com/photonstorm) or by buying our [books](http://phaser.io/shop/books) and [plugins](http://phaser.io/shop/plugins)
+* **Chat:** [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) or our [Slack Channel](http://phaser.io/news/2015/08/phaser-slack-channel)
+* **Extend:** With [Phaser Plugins](http://phaser.io/shop/plugins)
+* **Be awesome:** Support the future of Phaser on [Patreon](https://www.patreon.com/photonstorm) or by buying our [books](http://phaser.io/shop/books)
 
 ![div](http://www.phaser.io/images/github/div.png)
 
@@ -36,15 +36,21 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 ![div](http://www.phaser.io/images/github/div.png)
 
 <a name="whats-new"></a>
-## What's new in Phaser 2.4.3
+## What's new in Phaser 2.4.4
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> 24th August 2015
+> 15th October 2015
 
-The release of Phaser 2.4.3 continues our work with bug fixes, new features and continued optimizations. As before it's a point-release, making it a safe upgrade for anyone using a previous 2.4 build.
+The release of Phaser 2.4.4 continues our work with bug fixes, new features and optimizations. As with the previous version it's a point-release, making it a safe upgrade for anyone using an earlier 2.4 build.
 
-As well as working on this release we've also been busily writing tutorials for the first issue of [Interphase](http://phaser.io/interphase/), our new publication for Phaser developers. Packed full of exclusive content we've been coding games, writing tutorials and authoring deep-dive articles for the first issue. It's been a blast so far and I'm excited for it's release in early September - and if you [pre-order now](http://phaser.io/interphase) with the discount code 'earlybird' you can save 15% on the cover price.
+Internally here at Phaser HQ we have been busy with several new projects. 
+
+First we released [Interphase](http://phaser.io/interphase/), a new 400-page publication for Phaser developers. Packed full of exclusive content including 8 complete games, tutorials and a deep dive into the Phaser State Manager. It's been a blast to write and we have been really encouraged by the response from readers. We're planning on releasing Interphase 2 before the end of the year.
+
+We've also released [Particle Storm](http://phaser.io/shop/plugins/particlestorm). An advanced particle system allowing you to easily create stunning special effects in your games with just a few lines of code. Our primary design goal was to create a particle system that was extremely flexible. It was important that you should be able to easily integrate the effects into your games. Particles are constructed through easy-to-understand JavaScript objects with multiple properties and options to let you quickly put together complex visuals with minimum effort.
+
+As we close in towards the end of 2015 there are still a couple of new releases on the horizon, as well as Phaser 2.4.5. We're also getting very close to a fully working build of Phaser 2 using our new renderer. As always, keep you eyes on the Phaser web site or [Twitter](https://twitter.com/photonstorm) for the latest news.
 
 Finally we'd be extremely grateful if you could get involved with our [Phaser Patreon campaign](https://www.patreon.com/photonstorm). The uptake so far has been fantastic. Thank you to everyone who now supports Phaser development and shares our belief in the future of HTML5 gaming and Phasers role in that.
 
@@ -101,15 +107,15 @@ Install via [npm](https://www.npmjs.com)
 
 [jsDelivr](http://www.jsdelivr.com/#!phaser) is a "super-fast CDN for developers". Include the following in your html:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.4.3/phaser.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.4.4/phaser.js"></script>`
 
 or the minified version:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.4.3/phaser.min.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.4.4/phaser.min.js"></script>`
 
 [cdnjs.com](https://cdnjs.com/libraries/phaser) also offers a free CDN service. They have all versions of Phaser and even the custom builds:
 
-`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.3/phaser.js"></script>`
+`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.4/phaser.js"></script>`
 
 ### Phaser Sandbox
 
@@ -140,20 +146,21 @@ Using Phaser with **TypeScript**? Check out this great series of [Game From Scra
 
 ### Source Code Examples
 
-Ever since we started Phaser we've been growing and expanding our extensive set of source code examples. Currently there are over 500 of them!
+Ever since we started Phaser we've been growing and expanding our extensive set of source code examples. Currently there are over 700 of them!
 
 Browse the [Phaser Examples](http://phaser.io/examples) or clone the [examples repo][examples] and eat your heart out!
 
-### Phaser Books
+### Interphase
 
-<div align="center"><img src="http://phaser.io/images/github/books.jpg"></div>
+<div align="center"><img src="http://phaser.io/content/interphase/1/images/editorial/pages.jpg"></div>
 
-We've been busy writing books about Phaser. Available now:
+[Interphase](http://phaser.io/interphase) is a new book for Phaser developers of all skill levels.
 
-* [A Guide to the Phaser Tween Manager](https://leanpub.com/phasertweenmanager) Book + Code Bundle
-* [A Guide to the Phaser Scale Manager](https://leanpub.com/phaserscalemanager)
+With 400 pages of content you'll find detailed articles, game development "Making Of" guides and tutorials. All were written using the latest version of Phaser, so you won't be learning any out-dated tricks here.
 
-With more on the way. [Vote on the next title](http://www.html5gamedevs.com/topic/10962-which-phaser-book-would-you-like-to-see-next/) to be written.
+As well as the book you get all the source code, graphics and assets to go with it, as well as lots of extras too.
+
+[Read More](http://phaser.io/interphase)
 
 ### Game Mechanic Explorer
 
@@ -238,7 +245,7 @@ If you code with [TypeScript](http://www.typescriptlang.org/) there are comprehe
 <a name="road-map"></a>
 ## Road Map
 
-All Phaser development is now taking place on the Phaser 3 project. The Phaser 2 branch will still be supported and issues fixed, but roadmap features have been migrated over to Phaser 3.
+The majority of Phaser development is now taking place on the Phaser 3 project. The Phaser 2 branch will still be supported and issues fixed, but roadmap features have been migrated over to Phaser 3.
 
 <a name="phaser3"></a>
 ## Phaser 3
@@ -249,63 +256,98 @@ There is still plenty of time to add your suggestions and feedback in [this foru
 
 If you are an exceptional JavaScript developer and would like to join the Phaser 3 development team then let us know. We have a limited budget available to pay towards your time.
 
+## Phaser Nano
+
+[Phaser Nano](https://github.com/photonstorm/phaser-nano) is a cut-down and optimized build of Phaser designed specifically for super low file-size environments such as banner ads and interstitials. It still uses the same friendly API as Phaser but in a much smaller footprint. The current release being just 8.3KB.
+
 ![div](http://www.phaser.io/images/github/div.png)
 
 <a name="change-log"></a>
 ## Change Log
 
-## Version 2.4.3 - "Coramen" - 24th August 2014
+## Version 2.4.4 - "Amador" - 15th October 2015
 
 ### New Features
 
-* Loader.images is a new method that allows you to pass an array of image keys, and optionally the URLs to the Loader and have them all added to the load queue in one go.
-* TweenManager.frameBased allows you to control if all newly created Tweens update based on the physics step (i.e. frame based) or the system clock (time based). A frame based tween will use the physics elapsed timer when updating. This means it will retain the same consistent frame rate, regardless of the speed of the device. The duration value given should be given in frames. If the Tween uses a time based update (which is the default) then the duration is given in milliseconds. In this situation a 2000ms tween will last exactly 2 seconds, regardless of the device and how many visual updates the tween has actually been through.
-* Tween.frameBased does the same as TweenManager.frameBased but allows you to set the value on a per-tween basis.
-* BitmapText.smoothed is a new boolean property that allows you to set texture smoothing on a bitmap font or not. By default smoothing is always on, but you can turn it off which helps for bitmap fonts created from pixel art style character sets.
-* Text.addFontStyle and Text.addFontWeight allow you to apply font weights and styles to specific characters in a Text object. For example you can now include bold or italics within single Text objects (thanks @jdnichollsc #1950)
-* PIXI.CanvasPool is a new static global created to deal with the issue of resource leaks and continuous DOM node build-up when creating lots of Text or BitmapData objects, or when calling `generateTexture` on any display object. The CanvasPool will do its best to re-use out dated canvas elements rather than filling up the DOM with new ones.
-* Sprite.setTexture has a new `destroyBase` parameter - set this to `true` if you know the base used a generated texture that isn't being used by any other sprites. This will free-up the canvas for further re-use by other calls to `generateTexture` or Text objects.
-* Line.midPoint will return a Point object where the `x` and `y` values correspond to the center (or midpoint) of the Line segment.
-* Line.rotateAround allows you to rotate a Line around the given coordinates (in world space)
-* Line.centerOn will position the Line so that its midpoint lays on the coordinates given.
-* BitmapData.line draws a line to the BitmapData in the color and thickness specified.
-* BitmapData.op is a handy short-code to get and set the canvas global composite operator.
-* BitmapData.drawFull draws the given Game Object or Group to a BitmapData and then recursively iterates through all of its children, including children of Game Objects and Groups. It can draw Text, BitmapText, Sprites, Images, Emitters and Graphics objects. It's perfectly valid to pass in `game.world` as the parent object, and it will iterate through the entire display list.
-* Phaser.TilemapParser.INSERT_NULL is a new boolean that controls what happens when the parser encounters an empty tile: When scanning the Tiled map data the TilemapParser can either insert a null value (true) or a `Phaser.Tile` instance with an index of -1 (false, the default). Depending on your game type depends how this should be configured. If you've a large sparsely populated map and the tile data doesn't need to change then setting this value to `true` will help with memory consumption. However if your map is small, or you need to update the tiles (perhaps the map dynamically changes during the game) then leave the default value set (thanks #1982)
+* Emitter.emitParticle now has 4 new optional arguments: `x`, `y`, `key` and `frame`. These allow you to override whatever the Emitter default values may be and emit the particle from the given coordinates and with a new texture.
+* Group.resetChild is a new method that allows you to call both `child.reset` and/or `child.loadTexture` on the given child object. This is used internally by `getFirstDead` and similar, but is made public so you can use it as a group iteration callback. Note that the child must have public `reset` and `loadTexture` methods to be valid for the call.
+* Group.getFirstDead, Group.getFirstAlive and Group.getFirstExists all have new optional arguments: `createIfNull`, `x`, `y`, `key` and `frame`. If the method you call cannot find a matching child (i.e. getFirstDead cannot find any dead children) then the optional `createIfNull` allows you to instantly create a new child in the group using the position and texture arguments to do so. This allows you to always get a child back from the Group and remove the need to do null checks and Group inserts from your game code. The same arguments can also be used in a different way: if `createIfNull` is false AND you provide the extra arguments AND a child is found then it will be passed to the new `Group.resetChild` method. This allows you to retrieve a child from the Group and have it reset and instantly ready for use in your game without any extra code.
+* P2.Body.removeCollisionGroup allows you to remove the given CollisionGroup, or array of CollisionGroups, from the list of groups that a body will collide with and updates the collision masks (thanks @Garbanas #2047)
+* Filter.addToWorld allows you to quickly create a Phaser.Image object at the given position and size, with the Filter ready applied to it. This can eliminate lots of duplicate code.
+* Tiled 0.13.0 added support for layer data compression when exporting as JSON. This means that any .tmx stored using base64 encoding will start exporting layer data as a base64 encoded string rather than a native array. This update adds in automatic support for this as long as the data isn't compressed. For IE9 support you'll need to use the new polyfill found in the resources folder (thanks @noidexe #2084)
+* You can now load single layer Pyxel Edit TileMaps as an atlas (thanks @joshpmcghee #2050)
+* Canvas.getSmoothingPrefix will return the vendor prefixed smoothing enabled value from the context if set, otherwise null.
+* The Random Number Generator can now get and set its state via rnd.state. This allows you to do things like saving the state of the generator to a string that can be part of a save-game file and load it back in again (thanks @luckylooke #2056 #1900)
+* Device.iOSVersion now contains the major version number of iOS.
+* The new `PointerMode` enumeration value has been added for better simple input discrimination in the future, between active pointers such as touch screens and passive pointers, such as mouse cursors (thanks @pnstickne #2062)
+* Button.justReleasedPreventsOver controls if a just-release event
+on a pointer prevents it from being able to trigger an over event.
+* Button.forceOut expanded to accept a PointerMode value such that it
+can be controlled per-input mode.
+* Phaser.KeyCode is a new pseudo-type used by the Keyboard class (and your code) to allow for separation of all the Keyboard constants to their own file. This stops the JSDocs from becoming 'polluted' and allows for easier future expansion (thanks @pnstickne #2118 #2031)
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson @vrecluse @yahiko00 @cloakedninjas @qdrj)
-* JSDoc typo fixes (thanks @Cowa @yahiko00 @qdrj @STuFF)
-* VideoStream.active = false is used if the browser supports it, otherwise it falls back to VideoStream.stop.
-* Text can now accept `undefined` or `null` as the `text` argument in the constructor and will cast it as an empty string.
-* Point.rotate uses a faster and simpler rotation function when no distance argument is specified.
-* Setting a P2.Body from Static or Kinematic to Dynamic will now automatically adjust the Body.mass to be 1 (thanks @wayfu #2005)
-* Pointer.withinGame is no longer automatically set to `false` in the `Pointer.stop` method. Instead it will check if the Pointer actually is within the stage bounds and only set `withinGame` to `false` if it's outside the bounds.
-* MSPointer now has an `onPointerUpGlobal` handler for when the pointer is released outside of the canvas, but still within the browser window. This means that in IE11 a Sprites `onInputUp` event will now trigger even when outside the canvas (thanks @bvargish #2000)
-* MSPointer now has handlers for the pointer being over and outside of the canvas element, which sets the `Pointer.withinGame` booleans accordingly. It also triggers the `Mouse.mouseOutCallback` and `Mouse.mouseOverCallback` callbacks respectively.
-* The MSPointer event listeners have been renamed to all lower-case, i.e. 'pointerDown' is now 'pointerdown'.
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @milkey-mouse @timotei @qdrj @Garbanas @cloakedninjas)
+* Docs typo fixes (thanks @rwrountree @yeluoqiuzhi @pnstickne @fonsecas72 @JackMorganNZ @caryanne)
+* Math.average has been optimized (thanks @rwrountree #2025)
+* When calling GameObject.revive the `heal` method is called to apply the health value, allowing it to take into consideration a `maxHealth` value if set (thanks @bsparks #2027)
+* Change splice.call(arguments, ..) to use slice instead (thanks @pnstickne #2034 #2032)
+* BitmapData.move, moveH and moveV have a new optional `wrap` argument allowing you to control if the contents of the BitmapData are wrapped around the edges (true) or simply scrolled off (false).
+* Time.desiredFps has moved to a getter / setter.
+* Time.physicsElapsed and Time.physicsElapsedMS are no longer calculated every frame, but only when the desiredFps is changed.
+* Time.update has been streamlined and the `updateSetTimeout` and `updateRAF` methods merged and duplicate code removed.
+* Time.desiredFpsMult is a pre-calculated multiplier used in Game.update.
+* Time.refresh updates the `Time.time` and `Time.elapsedMS` values and is called automatically by Game.update.
+* DeviceButton was setting a `duration` property on itself, which went against the read only getter of duration (thanks @winstonwolff)
+* Added Node.js v4 stable to Travis config (thanks @phillipalexander #2070)
+* Optimised Canvas.getSmoothingEnabled, Canvas.setSmoothingEnabled and Canvas.setImageRenderingCrisp.
+* The Physics Editor Exporter (found in the resources folder of the repo) has had an option to prefix shape names and optimize JSON output added to it (thanks @Garbanas #2093)
+* Touch.addTouchLockCallback has a new argument `onEnd` which allows the callback to fire either on a touchstart or a touchend event.
+* The SoundManager now detects if the browser is running under iOS9 and uses a touchend callback to unlock the audio subsystem. Previous versions of iOS (and Android) still use touchstart. This fixes Apple's screw-up with regard to changing the way Web Audio should be triggered in Mobile Safari. Thanks Apple (thanks @MyCatCarlos for the heads-up #2095)
+* InputHandler.validForInput now checks if the game object has `input.enabled` set to `false` and doesn't validate it for input if that's the case.
+* The default Button.onOverMouseOnly value has changed from `false` to `true`. If you used this in your touch enabled games then please be aware of this change (#2083)
+* BitmapData.clear now automatically calls BitmapData.update at the end of it.
+* New Color stub added for the custom build process. Contains just the bare minimum of functions that Phaser needs to work. Cuts file size from 48.7KB to 7.4KB. Note: Do not stub this out if using BitmapData objects.
+* New DOM stub added for the custom build process. Contains just the bare minimum of functions that Phaser needs to work. Cuts file size from 14.8KB to 2.4KB. Note: Do not stub this out if using the full Scale Manager.
+* New Scale Manager stub added. Removes all Scale Manager handling from Phaser! But saves 75KB in the process. If you know you don't need to scale the Phaser canvas, or are handling that externally, then you can safely stub it out in a custom build.
+* Added the PIXI.PolyK, PIXI.WebGLGraphics and PIXI.CanvasGraphics files to the Graphics custom build option. They weren't used anyway and this removes an extra 40.2KB from the build size.
+* Phaser.Create no longer automatically creates a BitmapData object when it starts. It now only does it when you first make a texture or grid.
+* New Create stub added for the custom build process. Cuts file size by 8KB.
+* You can now exclude the FlexGrid from custom builds, saving 15KB.
+* The ScaleManager no longer creates a Phaser.FlexGrid if the class isn't available (i.e. excluded via a custom build)
+* Time.suggestedFps is now defaulted to `Time.desiredFps` for the first few frames until things have settled down (previously it was `null`) (thanks @noidexe #2130)
+* Text with anchor 0.5 and word wrap would have an extra space added to its width calculations, this is now adjusted for (thanks @nickryall #2052 #1990)
+* ScaleManager.getParentBounds now checks if `parentNode` has an `offsetParent` before calling `getBoundingClientRect` on it (thanks @McFarts #2134)
 
 ### Bug Fixes
 
-* Pointer.isDown was reset before the `Input.onUp` event, meaning you couldn't get the Pointer duration from within the event.
-* Pointer.isDown was reset before the Input tap calculations, meaning `onTap` wouldn't dispatch (thanks @stovenator #1953)
-* InputHandler.pointerOver would get stuck in an 'isOver' state if the Sprite changed its visibility during an `onUp` callback (thanks @Cristy94 #1955)
-* If you override the P2 mpx functions, to define your own px to meters values, the P2 Debug Bodies would ignore it (thanks @vrecluse #1957)
-* ArrayUtils.numberArrayStep would return an empty array if a single parameter was given, instead of a single step array (thanks @pooya72 #1958)
-* Text with tints applied wouldn't update properly in Canvas mode.
-* Removed use of the deprecated `enterFullScreen` and `leaveFullScreen` signals from the Scale Manager (thanks @mmanlod #1972)
-* BitmapText with tints applied wouldn't update properly in Canvas mode (thanks @Pajamaman #1969)
-* Group.cacheAsBitmap would be incorrectly offset in Canvas mode (thanks @mkristo #1925)
-* Text.setTextBounds didn't add the x and y values to the width and height offsets.
-* Line.rotate used a calculation method which resulted in the line growing (or shrinking) in length over time the more it was rotated. The new method never changes the lines length.
-* BitmapText.font failed to pull the new font from the Phaser Cache, stopping it from updating properly (thanks @AbrahamAlcaina #2001)
-* Video.stop now removes the 'playing' event listener, which stop Videos set to loop from throwing errors after being destroyed.
-* Tilemap.createFromObjects has been strengthened so that will only create Sprites for matching gids/ids/names. It also only sets the Sprite width and height values if they are present in the Tiled data (thanks @pparke #2012)
-* TilingSprite._renderCanvas wasn't correctly allowing for pixel rounding (thanks @ximop #2022)
-* Cache.addSpriteSheet didn't include default values for the `frameMax`, `margin` and `spacing` arguments (thanks @vladkens #2017 #2018)
-* Tilemap.shuffle was calling the deprecated Phaser.Utils.shuffle, which has now moved to Phaser.ArrayUtils.shuffle.
-* Enabling a filter on a display object that had a multiply blend mode set would cause the object to become invisible. The two cannot be combined, so when you set a filter on a display object it now automatically resets the blend mode to `NORMAL`. The same does not happen in reverse however, so if you've got a filter set and then change the blend mode to multiply it will still break. Be careful to capture this yourself (thanks @wayfu #1994)
+* Loader.bitmapFont wouldn't automatically set the `atlasURL` value if just the key was given.
+* The Loader would put the baseURL and/or path in front of `data:` and `blob` URLs (thanks @rblopes #2044)
+* When the Text width was being calculated it would add the `strokeThickness` value twice, causing an alignment offset (thanks @nickryall #2039)
+* Sound.onEndedHandler has a fix for AudioBufferSourceNode listener memory leak (thanks @Pappa #2069)
+* Game.update could call `updateLogic` multiple times in a single frame when catching up with slow device frame rates. This would cause Tweens to advance at twice the speed they should have done (thanks @mkristo)
+* Added useCapture flags to removeEventListener in MSPointer class (thanks @pmcmonagle #2055)
+* Under setTimeOut (or when `forceSetTimeOut` was true) the Time was incorrectly setting `Time.timeExpected` causing game updates to lag (thanks @satan6 #2087)
+* Fixes edge case when TilingSprite is removed before render (thanks @pnstickne #2097 #2092)
+* Camera.setBoundsToWorld only adjusts the bounds if it exists (thanks @prudolfs #2099)
+* Keyboard.addCallbacks didn't check to see if the arguments were `null`, only if they were `undefined` making the jsdocs misleading.
+* ScaleManager.getParentBounds now takes any transforms into account to get the correct parent bounds (thanks @jdnichollsc #2111 #2098)
+* Cache.addBitmapFont now applies a default value for the x and y spacing if the arguments are omitted (thanks @nlotz #2128)
+* Removed use of the `tilePosition` property in the Phaser.Rope class as it isn't implemented and caused calls to `Rope.reset` to crash (thanks @spayton #2135)
+* ScaleMin and ScaleMax stopped working in Phaser 2.3.0 due to an incorrect transform callback scope (thanks @brianbunch #2132)
+
+### Pixi Updates
+
+Please note that Phaser uses a custom build of Pixi and always has done. The following changes have been made to our custom build, not to Pixi in general.
+
+* CanvasRenderer.mapBlendModes optimised to cut down on file size.
+* PIXI.WebGLRenderer.updateTexture now returns a boolean depending on if the texture was successfully bound to the gl context or not.
+* PIXI.WebGLSpriteBatch.renderBatch would still try and render a texture even if `updateTexture` failed to bind it. It now checks the return value from `updateTexture` and ignores failed binds.
+* WebGLRenderer.mapBlendModes optimised to cut down on file size.
+* Sprite.getBounds would report an inaccurate value if the sprite was negatively scaled (causing things like generateTexture to be cut off) (thanks @DavidAPC #2108)
+* Removed DisplayObject.transformCallback as it's a Game Object component.
+* BaseTexture.skipRender is a new boolean that can be set to skip the rendering phase in the WebGL Sprite Batch. You may want to do this if you have a parent Sprite with no visible texture (i.e. uses the internal `__default` texture) that has children that you do want to render, without causing a batch flush in the process.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
@@ -344,10 +386,10 @@ All rights reserved.
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.4.3/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.4.3/phaser.min.js
-[get-zip]: https://github.com/photonstorm/phaser/archive/v2.4.3.zip
-[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.4.3.tar.gz
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.4.4/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.4.4/phaser.min.js
+[get-zip]: https://github.com/photonstorm/phaser/archive/v2.4.4.zip
+[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.4.4.tar.gz
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-svn]: https://github.com/photonstorm/phaser
