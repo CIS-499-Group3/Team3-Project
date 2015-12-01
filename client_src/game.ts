@@ -38,7 +38,7 @@ class PacmanGame {
         this.game.load.atlasJSONHash('blinky', 'assets/blinkymove.png', 'assets/blinkymove.json')
         //this.game.load.image('blinky', 'assets/blinky.png')
         this.game.load.image('smalldot', 'assets/dot2.png');
-        this.game.load.tilemap('tileset', 'assets/original_pacman_map.csv', null, Phaser.Tilemap.CSV);
+        this.game.load.tilemap('tileset', 'assets/original_pacman_map2.csv', null, Phaser.Tilemap.CSV);
         this.game.load.image('pacmanchunk', 'assets/pacman_chunk.png');
     }
 
