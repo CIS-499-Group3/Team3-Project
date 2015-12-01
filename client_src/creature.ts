@@ -393,3 +393,19 @@ export class CornersGhost extends SearchGhost {
         this.count = this.count + 1;
     }
 }
+
+export class CornersGhostChange extends SearchGhost {
+    private corners: number[];
+    private count: number;
+    constructor(game: Phaser.Game, pmap: map.PacMap, xtile, ytile, key){
+        super(game, pmap, xtile, ytile, key);
+        this.corners = [2, 0, 1, 3];
+        this.count = 0;
+    }
+
+    setNewGoal(): void {
+        //console.log(this);
+        this.goal = this.getMap().getCorners()[this.corners[this.count % 4]];
+        this.count = this.count + 1;
+    }
+}

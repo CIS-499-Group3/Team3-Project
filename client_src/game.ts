@@ -13,6 +13,8 @@ class PacmanGame {
     private player: creature.Pacman;
     private blinky1: creature.CornersGhost;
     private blinky2: creature.SimpleGhost;
+		private blinky3: creature.CornersGhostChange;
+		private blinky4: creature.SimpleGhost;
     private smallDotMap: dot.SmallDot[];
     private teleportTiles: Phaser.Tile[];
     private layer: Phaser.TilemapLayer;
@@ -93,6 +95,14 @@ class PacmanGame {
         this.game.physics.arcade.collide(this.player, this.blinky2, (s, t) => {
             this.killPlayer();
         });
+				
+				this.game.physics.arcade.collide(this.player, this.blinky3, (s, t) => {
+						this.killPlayer();
+				});
+				
+				this.game.physics.arcade.collide(this.player, this.blinky4, (s, t) => {
+						this.killPlayer();
+				});
 
         // if (this.lives < 0) {
         //     this.onLose();
@@ -113,11 +123,13 @@ class PacmanGame {
 
     // Called when the game has been won.
     private onWin(): void {
-        this.game.physics.arcade.isPaused = true;
+   //     this.game.physics.arcade.isPaused = true;
         this.game.time.events.add(1000, () => {
             this.player.destroy();
             this.blinky1.destroy();
             this.blinky2.destroy();
+						this.blinky3.destroy();
+						this.blinky4.destroy();
             this.map.getTilemap().destroy();
             this.mapCount++;
             this.game.load.tilemap('map' + this.mapCount,
@@ -139,8 +151,12 @@ class PacmanGame {
             this.player = new creature.PlayerPacman(this.game, this.map, pacmanSpawn.getX(), pacmanSpawn.getY());
             let blinkySpawnTile = this.map.getBlinkySpawns()[0];
             let inkySpawnTile = this.map.getInkySpawns()[0];
+						let pinkySpawnTile = this.map.getPinkySpawns() [0];
+						let clydeSpawnTile = this.map.getClydeSpawns() [0];
             this.blinky1.reset(blinkySpawnTile.getCenterX(), blinkySpawnTile.getCenterY());
             this.blinky2.reset(inkySpawnTile.getCenterX(), blinkySpawnTile.getCenterY());
+						this.blinky3.reset(pinkySpawnTile.getCenterX(), pinkySpawnTile.getCenterY());
+						this.blinky4.reset(clydeSpawnTile.getCenterX(), clydeSpawnTile.getCenterY());
         });
     }
 
@@ -196,10 +212,16 @@ class PacmanGame {
         // Blinky, for the deliverables.
         let blinkySpawnTile = pacMap.getBlinkySpawns() [0];
         let inkySpawnTile = pacMap.getInkySpawns() [0];
+				let pinkySpawnTile = pacMap.getPinkySpawns() [0];
+				let clydeSpawnTile = pacMap.getClydeSpawns() [0];
         this.blinky1 = new creature.CornersGhost(this.game, pacMap, blinkySpawnTile.getX(), blinkySpawnTile.getY(), "blinky");
         this.blinky2 = new creature.ScanningGhost(this.game, pacMap, inkySpawnTile.getX(), inkySpawnTile.getY(), "blinky");
+				this.blinky3 = new creature.CornersGhostChange(this.game, pacMap, pinkySpawnTile.getX(), pinkySpawnTile.getY(), "blinky");
+				this.blinky4 = new creature.ScanningGhost(this.game, pacMap, clydeSpawnTile.getX(), clydeSpawnTile.getY(), "blinky");
         this.blinky1.body.immovable = true;
         this.blinky2.body.immovable = true;
+				this.blinky3.body.immovable = true;
+				this.blinky4.body.immovable = true;
 
         //this.smallDot = new dot.SmallDot(this.game, pacMap, (10*this.tilemap.tileWidth)-160, (10*this.tilemap.tileHeight)-100);
         //console.log(this.smallDotMap);
