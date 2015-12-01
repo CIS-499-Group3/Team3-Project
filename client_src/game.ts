@@ -75,7 +75,7 @@ class PacmanGame {
 	let blinkySpawnTile = pacMap.getBlinkySpawns() [0];
 	let inkySpawnTile = pacMap.getInkySpawns() [0];
         this.blinky1 = new creature.CornersGhost(this.game, pacMap, blinkySpawnTile.getX(), blinkySpawnTile.getY(), "blinky");
-        this.blinky2 = new creature.SimpleGhost(this.game, pacMap, inkySpawnTile.getX(), inkySpawnTile.getY(), "blinky");
+        this.blinky2 = new creature.ScanningGhost(this.game, pacMap, inkySpawnTile.getX(), inkySpawnTile.getY(), "blinky");
         this.blinky1.body.immovable = true;
         this.blinky2.body.immovable = true;
 

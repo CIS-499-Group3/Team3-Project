@@ -239,6 +239,12 @@ export class SimpleGhost extends Ghost {
     }
 
     update(){
+        this.checkNextTile();
+        //console.log([this, this.desiredDirection, this.currentDirection, this.body.velocity.x]);
+        this.attemptDesiredDirection();
+    }
+
+    checkNextTile(){
         this.nextTile = this.getContainingTile().viewDirection(this.currentDirection);
         while(!this.nextTile.isTraversable()) {
             //console.log([this, this.currentDirection]);
@@ -246,68 +252,54 @@ export class SimpleGhost extends Ghost {
             this.nextTile = this.getContainingTile().viewDirection(this.currentDirection);
             this.setDesiredDirection(this.currentDirection);
         }
-        //console.log([this, this.desiredDirection, this.currentDirection, this.body.velocity.x]);
-        this.attemptDesiredDirection();
     }
 }
 
 /*
- * Class that implements a slightly more sophisticated Ghost behavior.  This ghost first tries to reach the top of the
- * map, and then scans left-to-right downwards towards the bottom of the map, then scans back to the top, ad infinitum.
+ * Ghost that behaves largely like SimpleGhost, but attempts to leave any "spawning box" it may have started in.
  */
 export class ScanningGhost extends SimpleGhost {
-    private scanningDown: boolean;
-
     constructor(game: Phaser.Game, pmap: map.PacMap, xtile, ytile, key) {
         super(game, pmap, xtile, ytile, key);
-        this.scanningDown = false;
-        this.currentDirection = map.Direction.NORTH;
-        this.setDesiredDirection(this.currentDirection);
     }
 
     update(){
-        this.nextTile = this.getContainingTile().viewDirection(this.currentDirection);
-        while(!this.nextTile.isTraversable()) {
-            if(this.scanningDown){
-                if(this.currentDirection === map.Direction.EAST || this.currentDirection === map.Direction.WEST){
-                    if(this.getContainingTile().viewDirection(map.Direction.SOUTH).isTraversable()){
-                        this.currentDirection = map.Direction.SOUTH;
-                        break;
-                    }
-                    else if(this.getContainingTile().viewDirection(map.Direction.NORTH).isTraversable()){
-                        this.currentDirection = map.Direction.NORTH;
-                        continue;
-                    }
+        if(this.isInSpawnBox()){
+            var neighbors = this.getContainingTile().adjacent();
+            for (var i=0; i<neighbors.length; i++){
+                if (neighbors[i].getTileId() == 0 && this.currentDirection != i){
+                    this.setDesiredDirection(i);
+                    this.currentDirection = i;
+                    break;
                 }
-                else if(this.currentDirection === map.Direction.SOUTH || this.currentDirection === map.Direction.NORTH){
-                    if(this.currentDirection === map.Direction.SOUTH && this.getContainingTile().getY() ===
-                        this.getMap().getHeight()){
-                        this.scanningDown = false;
-                        continue;
-                    }
-                    if (this.getContainingTile().viewDirection(map.Direction.EAST).isTraversable()) {
-                        this.currentDirection = map.Direction.EAST;
-                        break;
-                    }
-                    else if (this.getContainingTile().viewDirection(map.Direction.WEST).isTraversable()) {
-                        this.currentDirection = map.Direction.WEST;
-                        continue;
+                if (neighbors[i].isTraversable()) {
+                    var twoTilesAway = neighbors[i].adjacent();
+                    for (var j = 0; j < twoTilesAway.length; j++) {
+                        if (twoTilesAway[j].getTileId() == 0 && this.currentDirection != i) {
+                            this.setDesiredDirection(i);
+                            this.currentDirection = i;
+                            break;
+                        }
                     }
                 }
             }
-            else {
-                if(this.currentDirection === map.Direction.EAST || this.currentDirection === map.Direction.WEST){
-                    if(this.getContainingTile().viewDirection(map.Direction.NORTH).isTraversable()){
-                        this.currentDirection = map.Direction.NORTH;
-                        break;
-                    }
-                }
-            }
-            this.currentDirection = map.randomDirection();
+            //console.log(this.currentDirection);
+            this.checkNextTile();
         }
-        this.nextTile = this.getContainingTile().viewDirection(this.currentDirection);
-        this.setDesiredDirection(this.currentDirection);
+        else
+            this.checkNextTile();
+        //console.log(this.desiredDirection);
         this.attemptDesiredDirection();
+    }
+
+    isInSpawnBox(): boolean {
+        if(this.getContainingTile().getTileId() == 6
+        || this.getContainingTile().getTileId() == 7
+        || this.getContainingTile().getTileId() == 8
+        || this.getContainingTile().getTileId() == 9)
+        return true;
+    else
+        return false;
     }
 }
 

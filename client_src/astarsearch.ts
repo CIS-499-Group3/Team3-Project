@@ -87,7 +87,7 @@ class Node {
  * This code was adapted from code available in the Typescript Collections project on Github.
  * Copyright 2013 Basarat Ali Syed. All Rights Reserved.
  * Licensed under MIT open source license http://opensource.org/licenses/MIT
- * Orginal javascript code was by Mauricio Santos
+ * Original javascript code was by Mauricio Santos
  */
 class PriorityQueue {
     private data: Node[] = [];
