@@ -46,7 +46,7 @@ class PacmanGame {
 
     // Called by phaser to set up the game world.
     create(): void {
-        console.log(this)
+        console.log(this);
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         let tilemap = this.game.add.tilemap('tileset');
         //this.tilemap.create('layer', 20, 20, 32 ,32);
@@ -72,8 +72,8 @@ class PacmanGame {
         this.player = new creature.PlayerPacman(this.game, pacMap, pacmanSpawnTile.getX(), pacmanSpawnTile.getY());
         
         // Blinky, for the deliverables.
-	let blinkySpawnTile = pacMap.getBlinkySpawns() [0];
-	let inkySpawnTile = pacMap.getInkySpawns() [0];
+	    let blinkySpawnTile = pacMap.getBlinkySpawns() [0];
+	    let inkySpawnTile = pacMap.getInkySpawns() [0];
         this.blinky1 = new creature.CornersGhost(this.game, pacMap, blinkySpawnTile.getX(), blinkySpawnTile.getY(), "blinky");
         this.blinky2 = new creature.ScanningGhost(this.game, pacMap, inkySpawnTile.getX(), inkySpawnTile.getY(), "blinky");
         this.blinky1.body.immovable = true;
