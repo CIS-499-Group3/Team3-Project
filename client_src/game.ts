@@ -38,7 +38,7 @@ class PacmanGame {
         this.game.load.atlasJSONHash('blinky', 'assets/blinkymove.png', 'assets/blinkymove.json')
         //this.game.load.image('blinky', 'assets/blinky.png')
         this.game.load.image('smalldot', 'assets/dot2.png');
-        this.game.load.tilemap('tileset', 'assets/original_pacman_map2.csv', null, Phaser.Tilemap.CSV);
+        this.game.load.tilemap('tileset', 'assets/original_pacman_map.csv', null, Phaser.Tilemap.CSV);
         this.game.load.image('pacmanchunk', 'assets/pacman_chunk.png');
     }
 
@@ -177,8 +177,15 @@ class PacmanGame {
     }
 
     private respawnPlayer(): void {
-        let pacmanSpawn = util.randomChoice(this.map.getPacmanSpawns());
-        this.player.moveToTile(pacmanSpawn);
+        this.player.destroy();
+        this.game.time.events.add(1000, () => {
+            let pacmanSpawn = util.randomChoice(this.map.getPacmanSpawns());
+            this.player = new creature.PlayerPacman(this.game, this.map, pacmanSpawn.getX(), pacmanSpawn.getY());
+            let blinkySpawnTile = this.map.getBlinkySpawns()[0];
+            let inkySpawnTile = this.map.getInkySpawns()[0];
+            this.blinky1.reset(blinkySpawnTile.getCenterX(), blinkySpawnTile.getCenterY());
+            this.blinky2.reset(inkySpawnTile.getCenterX(), blinkySpawnTile.getCenterY());
+        });
     }
 
     private updateScoreText(){
@@ -199,11 +206,11 @@ class PacmanGame {
         this.player.explode('pacmanchunk', 20);
         if (this.lives < 0){
             this.player.destroy();
-            this.game.time.events.add(1000, () => this.onLose())
+            this.game.time.events.add(1000, () => this.onLose());
         } else {
             this.respawnPlayer();
         }
-        
+
     }
 }
 

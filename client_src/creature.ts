@@ -265,6 +265,7 @@ export class ScanningGhost extends SimpleGhost {
 
     update(){
         if(this.isInSpawnBox()){
+            console.log('leaving box');
             var neighbors = this.getContainingTile().adjacent();
             for (var i=0; i<neighbors.length; i++){
                 if (neighbors[i].getTileId() == 0 && this.currentDirection != i){
@@ -315,6 +316,10 @@ export class SearchGhost extends Ghost {
     }
 
     update(){
+        if(this.body.velocity.x == 0 && this.body.velocity.y == 0){
+            this.goal = null;
+            this.nextTile = null;
+        }
         //console.log('path length', this.path.length);
         if(this.goal == null) {
             this.setNewGoal();
