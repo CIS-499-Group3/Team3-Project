@@ -42,11 +42,11 @@ class PacmanGame {
         this.game.load.image('badpacman', 'assets/awesomePacman.png');
         this.game.load.atlasJSONHash('pacman', 'assets/pacmove.png', 'assets/pacmove.json')
         this.game.load.image('testset', 'assets/testtileset.png');
-        this.game.load.atlasJSONHash('blinky', 'assets/blinky/blinkymove.png', 'assets/blinky/blinkymove.json')
+        this.game.load.atlasJSONHash('blinky', 'assets/blinky/blinkyMove.png', 'assets/blinky/blinkyMove.json')
         //this.game.load.image('blinky', 'assets/blinky.png')
-				this.game.load.atlasJSONHash('inky', 'assets/inky/inkymove.png', 'assets/inky/inkymove.json')
-        this.game.load.atlasJSONHash('pinky', 'assets/pinky/pinkymove.png', 'assets/pinky/pinkymove.json')
-				this.game.load.atlasJSONHash('clyde', 'assets/clyde/clydemove.png', 'assets/clyde/clydemove.json')
+				this.game.load.atlasJSONHash('inky', 'assets/inky/inkyMove.png', 'assets/inky/inkyMove.json')
+        this.game.load.atlasJSONHash('pinky', 'assets/pinky/pinkyMove.png', 'assets/pinky/pinkyMove.json')
+				this.game.load.atlasJSONHash('clyde', 'assets/clyde/clydeMove.png', 'assets/clyde/clydeMove.json')
 				this.game.load.image('smalldot', 'assets/dot2.png');
         this.game.load.tilemap('map0', PacmanGame.mapsAssets[0], null, Phaser.Tilemap.CSV);
         this.game.load.image('pacmanchunk', 'assets/pacman_chunk.png');
