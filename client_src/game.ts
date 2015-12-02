@@ -179,7 +179,7 @@ class PacmanGame {
     private killPlayer(){
         this.removeLife();
         this.player.explode('pacmanchunk', 20);
-        if (this.lives < 0){
+        if (this.lives < 1){
             this.player.destroy();
             this.game.time.events.add(1000, () => this.onLose());
         } else {
