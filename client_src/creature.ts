@@ -209,7 +209,6 @@ export class Ghost extends DesiredDirectionCreature {
         this.animations.add('creep', [0,8,9,10,11,12,13,14],10, true);
         this.animations.add('blue', [1,15], 10, true);
         this.animations.add('blink', [2,3,1,15], 10, true);
-        this.animations.add('dead', [4,5,6,7], 10, true);
         this.animations.play('creep');
         
         //ghost directional animations
@@ -217,6 +216,11 @@ export class Ghost extends DesiredDirectionCreature {
         this.animations.add('eastcreep', [9,10], 10, true);
         this.animations.add('southcreep', [11,12], 10, true);
         this.animations.add('westcreep', [13,14], 10, true);
+        //dead ghosts animations
+        this.animations.add('northdead', [4], 10, true);
+        this.animations.add('eastdead', [5], 10, true);
+        this.animations.add('southdead', [6], 10, true);
+        this.animations.add('westdead', [7], 10, true);
 }}
 
 export class RandomGhost extends Ghost {
