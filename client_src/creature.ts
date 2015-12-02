@@ -206,10 +206,18 @@ export class PlayerPacman extends Pacman {
 export class Ghost extends DesiredDirectionCreature {
     constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile, key){
         super(game, map, xtile, ytile, key);
-        this.animations.add('creep', [0,1,2,3,4,5,6,7],10, true);
+        this.animations.add('creep', [0,8,9,10,11,12,13,14],10, true);
+        this.animations.add('blue', [1,15], 10, true);
+        this.animations.add('blink', [2,3,1,15], 10, true);
+        this.animations.add('dead', [4,5,6,7], 10, true);
         this.animations.play('creep');
-    }
-}
+        
+        //ghost directional animations
+        this.animations.add('northcreep', [0,8],10, true);
+        this.animations.add('eastcreep', [9,10], 10, true);
+        this.animations.add('southcreep', [11,12], 10, true);
+        this.animations.add('westcreep', [13,14], 10, true);
+}}
 
 export class RandomGhost extends Ghost {
     constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile, key){
@@ -374,6 +382,18 @@ export class SearchGhost extends Ghost {
         super.attemptDesiredDirection();
         if(this.getContainingTile().getTile() == this.nextTile.getTile()){
             this.moveToNextTile();
+            if(this.desiredDirection == map.Direction.NORTH){
+            this.animations.play('northcreep');
+            }
+            else if(this.desiredDirection == map.Direction.EAST){
+            this.animations.play('eastcreep');
+            }
+            else if(this.desiredDirection == map.Direction.SOUTH){
+            this.animations.play('southcreep');
+            }
+            else if(this.desiredDirection == map.Direction.WEST){
+            this.animations.play('westcreep');
+            }
         }
     }
 }
