@@ -11,10 +11,10 @@ class PacmanGame {
     private game: Phaser.Game;
 
     private player: creature.Pacman;
-    private blinky1: creature.CornersGhost;
-    private inky1: creature.SimpleGhost;
-		private pinky1: creature.CornersGhostChange;
-		private clyde1: creature.SimpleGhost;
+    private blinky1: creature.Ghost;
+    private inky1: creature.Ghost;
+		private pinky1: creature.Ghost;
+		private clyde1: creature.Ghost;
     private smallDotMap: dot.SmallDot[];
     private teleportTiles: Phaser.Tile[];
     private layer: Phaser.TilemapLayer;
@@ -225,7 +225,7 @@ class PacmanGame {
         this.blinky1 = new creature.CornersGhost(this.game, pacMap, blinkySpawnTile.getX(), blinkySpawnTile.getY(), "blinky");
         this.inky1 = new creature.ScanningGhost(this.game, pacMap, inkySpawnTile.getX(), inkySpawnTile.getY(), "inky");
 				this.pinky1 = new creature.CornersGhostChange(this.game, pacMap, pinkySpawnTile.getX(), pinkySpawnTile.getY(), "pinky");
-				this.clyde1 = new creature.ScanningGhost(this.game, pacMap, clydeSpawnTile.getX(), clydeSpawnTile.getY(), "clyde");
+				this.clyde1 = new creature.SeekPacmanGhost(this.game, pacMap, clydeSpawnTile.getX(), clydeSpawnTile.getY(), "clyde");
         this.blinky1.body.immovable = true;
         this.inky1.body.immovable = true;
 				this.pinky1.body.immovable = true;

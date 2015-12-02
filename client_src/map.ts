@@ -21,6 +21,8 @@ var TRAVERSABLE_TILES = [TileID.FLOOR, TileID.DOT_TEST, TileID.DOT_TILE, TileID.
 
 export class PacMap {
     private tilemap: Phaser.Tilemap;
+    private reportedPacmanPosition: TileView;
+    
     constructor(tilemap: Phaser.Tilemap){
         this.tilemap = tilemap;
     }
@@ -88,6 +90,14 @@ export class PacMap {
 	}
     getPacmanSpawns(): TileView[] {
         return this.allTilesWithID(TileID.PACMAN_SPAWN);
+    }
+
+    reportPacmanPosition(tile: TileView){
+        this.reportedPacmanPosition = tile;
+    }
+
+    getReportedPacmanPosition(): TileView {
+        return this.reportedPacmanPosition;
     }
 }
 

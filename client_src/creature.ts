@@ -1,6 +1,6 @@
 import map = require('./map');
 import search = require('./astarsearch');
-
+import util = require('./util');
 var BASE_SPEED: number = 150;
 
 // Number of pixels a sprite can be away from the center of the tile to be counted as "at the center".
@@ -161,6 +161,10 @@ export class Pacman extends DesiredDirectionCreature {
         this.scale.set(.5,.5); // This is just because our pacman image is 64x64.
         this.animations.add('move', [0, 1, 2, 1], 10, true);
     }
+
+    update(){
+        this.getMap().reportPacmanPosition(this.getContainingTile());
+    }
 }
 
 // Let's seperate this from the pure Pacman class, just in case we want to add multiplayer in the future.
@@ -171,6 +175,7 @@ export class PlayerPacman extends Pacman {
     }
 
     update(){
+        super.update();
         // This is called by the Sprite class once every tick.
 
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
@@ -350,6 +355,10 @@ export class SearchGhost extends Ghost {
             this.setNewPath();
         }
         while(this.nextTile == null) {
+            if (this.path.length == 0){
+                this.nextTile = null;
+                break;
+            }
             //console.log(this.path);
             this.nextTile = this.path.pop();
             //console.log(this.nextTile);
@@ -362,10 +371,10 @@ export class SearchGhost extends Ghost {
     }
 
     setNewPath(): void {
-        //console.log('current tile', this.getContainingTile());
-        //console.log('goal', this.goal);
+        if (this.goal === this.getContainingTile()){
+            console.log("Same"); 
+        }
         this.path = search.findPathToPosition(this.getContainingTile(), this.goal);
-        //console.log('path', this.path);
     }
 
     moveToNextTile(): void {
@@ -398,6 +407,10 @@ export class SearchGhost extends Ghost {
 
     attemptDesiredDirection(){
         super.attemptDesiredDirection();
+        if (this.nextTile === null){
+            return;
+        }
+        
         if(this.getContainingTile().getTile() == this.nextTile.getTile()){
             this.moveToNextTile();
             
@@ -414,6 +427,8 @@ export class SearchGhost extends Ghost {
                 this.animations.play('westcreep');
             }
         }
+
+        
     }
 }
 
@@ -447,4 +462,20 @@ export class CornersGhostChange extends SearchGhost {
         this.goal = this.getMap().getCorners()[this.corners[this.count % 4]];
         this.count = this.count + 1;
     }
+}
+
+export class SeekPacmanGhost extends SearchGhost {
+    constructor(game: Phaser.Game, pmap: map.PacMap, xtile, ytile, key){
+        super(game, pmap, xtile, ytile, key);
+    }
+
+    setNewGoal(): void {
+        var pacPos = this.getMap().getReportedPacmanPosition();
+        if (!pacPos){
+            // If pacman position is unknown, go to random corner.
+            pacPos = util.randomChoice(this.getMap().getCorners());
+        }
+        this.goal = pacPos;
+    }
+
 }
