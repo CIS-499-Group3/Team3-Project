@@ -131,8 +131,8 @@ class PacmanGame {
             this.player.destroy();
             this.blinky1.destroy();
             this.inky1.destroy();
-						this.pinky1.destroy();
-						this.clyde1.destroy();
+	    this.pinky1.destroy();
+	    this.clyde1.destroy();
             this.map.getTilemap().destroy();
             this.mapCount++;
             this.game.load.tilemap('map' + this.mapCount,
@@ -188,6 +188,11 @@ class PacmanGame {
 
     }
 
+    private onPowerPelletEaten(){
+        // TODO: Do actual stuff.
+        console.log("Power pellet eaten");
+    }
+
     private initializeMap(name: string){
         let tilemap = this.game.add.tilemap(name);
         //this.tilemap.create('layer', 20, 20, 32 ,32);
@@ -198,7 +203,7 @@ class PacmanGame {
 
 
         tilemap.setCollision(1, true, this.layer);
-        tilemap.setCollision([0,2,3,5], false, this.layer); // Set floors to not collide.
+        tilemap.setCollision([map.TileID.FLOOR,map.TileID.DOT_TEST, map.TileID.DOT_TILE,map.TileID.PACMAN_SPAWN], false, this.layer); // Set floors to not collide.
 
         // Oddly enough, the 'score' value in the constructor doesn't hold and I don't know why.
         // Try it out:
@@ -259,6 +264,12 @@ class PacmanGame {
                 this.player.x = this.player.getContainingTile().viewSouth().getCenterY();
             if (this.player.getContainingTile().getTile().y == tilemap.height-1)
                 this.player.x = this.player.getContainingTile().viewWest().getCenterY();
+        }, this);
+
+        // Power pellet rules.
+        pacMap.getTilemap().setTileIndexCallback(map.TileID.DOT_TILE, (creature, tile) => {
+            pacMap.getTilemap().putTile(map.TileID.FLOOR, tile.x, tile.y); // Replace with floor.
+            this.onPowerPelletEaten();
         }, this);
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
     }
