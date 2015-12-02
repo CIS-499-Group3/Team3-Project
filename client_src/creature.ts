@@ -303,6 +303,18 @@ export class ScanningGhost extends SimpleGhost {
             this.checkNextTile();
         //console.log(this.desiredDirection);
         this.attemptDesiredDirection();
+            if(this.desiredDirection == map.Direction.NORTH){
+                this.animations.play('northcreep');
+            }
+            else if(this.desiredDirection == map.Direction.EAST){
+                this.animations.play('eastcreep');
+            }
+            else if(this.desiredDirection == map.Direction.SOUTH){
+                this.animations.play('southcreep');
+            }
+            else if(this.desiredDirection == map.Direction.WEST){
+                this.animations.play('westcreep');
+            }
     }
 
     isInSpawnBox(): boolean {
@@ -375,6 +387,8 @@ export class SearchGhost extends Ghost {
                     this.setDesiredDirection(map.Direction.SOUTH);
             }
             //console.log(this.desiredDirection);
+            
+            
         }
         else{
             this.nextTile = null;
@@ -386,17 +400,18 @@ export class SearchGhost extends Ghost {
         super.attemptDesiredDirection();
         if(this.getContainingTile().getTile() == this.nextTile.getTile()){
             this.moveToNextTile();
+            
             if(this.desiredDirection == map.Direction.NORTH){
-            this.animations.play('northcreep');
+                this.animations.play('northcreep');
             }
             else if(this.desiredDirection == map.Direction.EAST){
-            this.animations.play('eastcreep');
+                this.animations.play('eastcreep');
             }
             else if(this.desiredDirection == map.Direction.SOUTH){
-            this.animations.play('southcreep');
+                this.animations.play('southcreep');
             }
             else if(this.desiredDirection == map.Direction.WEST){
-            this.animations.play('westcreep');
+                this.animations.play('westcreep');
             }
         }
     }
