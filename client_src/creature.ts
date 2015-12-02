@@ -236,6 +236,20 @@ export class Ghost extends DesiredDirectionCreature {
                 this.animations.play('westcreep');
             }
     }
+    setDeadGhostLook(): void {
+        if(this.desiredDirection == map.Direction.NORTH){
+                this.animations.play('northdead');
+            }
+            else if(this.desiredDirection == map.Direction.EAST){
+                this.animations.play('eastdead');
+            }
+            else if(this.desiredDirection == map.Direction.SOUTH){
+                this.animations.play('southdead');
+            }
+            else if(this.desiredDirection == map.Direction.WEST){
+                this.animations.play('westdead');
+            }
+    }
 }
 
 export class RandomGhost extends Ghost {
