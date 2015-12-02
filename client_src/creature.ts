@@ -226,7 +226,36 @@ export class Ghost extends DesiredDirectionCreature {
         this.animations.add('eastdead', [5], 10, true);
         this.animations.add('southdead', [6], 10, true);
         this.animations.add('westdead', [7], 10, true);
-}}
+}
+    setGhostLook():void{
+        if(this.desiredDirection == map.Direction.NORTH){
+                this.animations.play('northcreep');
+            }
+            else if(this.desiredDirection == map.Direction.EAST){
+                this.animations.play('eastcreep');
+            }
+            else if(this.desiredDirection == map.Direction.SOUTH){
+                this.animations.play('southcreep');
+            }
+            else if(this.desiredDirection == map.Direction.WEST){
+                this.animations.play('westcreep');
+            }
+    }
+    setDeadGhostLook(): void {
+        if(this.desiredDirection == map.Direction.NORTH){
+                this.animations.play('northdead');
+            }
+            else if(this.desiredDirection == map.Direction.EAST){
+                this.animations.play('eastdead');
+            }
+            else if(this.desiredDirection == map.Direction.SOUTH){
+                this.animations.play('southdead');
+            }
+            else if(this.desiredDirection == map.Direction.WEST){
+                this.animations.play('westdead');
+            }
+    }
+}
 
 export class RandomGhost extends Ghost {
     constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile, key){
@@ -308,18 +337,7 @@ export class ScanningGhost extends SimpleGhost {
             this.checkNextTile();
         //console.log(this.desiredDirection);
         this.attemptDesiredDirection();
-            if(this.desiredDirection == map.Direction.NORTH){
-                this.animations.play('northcreep');
-            }
-            else if(this.desiredDirection == map.Direction.EAST){
-                this.animations.play('eastcreep');
-            }
-            else if(this.desiredDirection == map.Direction.SOUTH){
-                this.animations.play('southcreep');
-            }
-            else if(this.desiredDirection == map.Direction.WEST){
-                this.animations.play('westcreep');
-            }
+        this.setGhostLook();
     }
 
     isInSpawnBox(): boolean {
@@ -412,20 +430,8 @@ export class SearchGhost extends Ghost {
         }
         
         if(this.getContainingTile().getTile() == this.nextTile.getTile()){
-            this.moveToNextTile();
-            
-            if(this.desiredDirection == map.Direction.NORTH){
-                this.animations.play('northcreep');
-            }
-            else if(this.desiredDirection == map.Direction.EAST){
-                this.animations.play('eastcreep');
-            }
-            else if(this.desiredDirection == map.Direction.SOUTH){
-                this.animations.play('southcreep');
-            }
-            else if(this.desiredDirection == map.Direction.WEST){
-                this.animations.play('westcreep');
-            }
+            this.moveToNextTile();            
+            this.setGhostLook();
         }
 
         
