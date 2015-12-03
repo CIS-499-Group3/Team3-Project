@@ -91,7 +91,7 @@ class PacmanGame {
         });
 
         //PacMan Death Collsion and Reset
-        this.game.physics.arcade.collide(this.player, this.blinky1, (s, t) => {
+        this.game.physics.arcade.overlap(this.player, this.blinky1, (s, t) => {
             if (this.blinky1.afraid) {
                 if (this.blinky1.alive) {
                     this.blinky1.alive = false;
@@ -104,7 +104,7 @@ class PacmanGame {
                 this.killPlayer();
         });
 
-        this.game.physics.arcade.collide(this.player, this.inky1, (s, t) => {
+        this.game.physics.arcade.overlap(this.player, this.inky1, (s, t) => {
             if (this.inky1.afraid) {
                 if (this.inky1.alive) {
                     this.inky1.alive = false;
@@ -118,7 +118,7 @@ class PacmanGame {
 
         });
 				
-        this.game.physics.arcade.collide(this.player, this.pinky1, (s, t) => {
+        this.game.physics.arcade.overlap(this.player, this.pinky1, (s, t) => {
             if (this.pinky1.afraid) {
                 if (this.pinky1.alive) {
                     this.pinky1.alive = false;
@@ -132,7 +132,7 @@ class PacmanGame {
 
         });
 
-        this.game.physics.arcade.collide(this.player, this.clyde1, (s, t) => {
+        this.game.physics.arcade.overlap(this.player, this.clyde1, (s, t) => {
             if (this.clyde1.afraid) {
                 if (this.clyde1.alive) {
                     this.clyde1.alive = false;
