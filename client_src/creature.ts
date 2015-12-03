@@ -465,6 +465,13 @@ export class SearchGhost extends Ghost {
             this.setGhostLook();
         }
     }
+
+    runAway(){
+        super.runAway();
+        this.goal = null;
+        this.path = [];
+        this.nextTile = null;
+    }
 }
 
 export class CornersGhost extends SearchGhost {
