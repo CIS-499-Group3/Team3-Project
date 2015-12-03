@@ -1,7 +1,7 @@
 import map = require('./map');
 import search = require('./astarsearch');
 import util = require('./util');
-var BASE_SPEED: number = 150;
+var BASE_SPEED: number = 100;
 
 // Number of pixels a sprite can be away from the center of the tile to be counted as "at the center".
 // Smaller values will likely cause bugs as creatures skip over their turns.
@@ -11,6 +11,7 @@ const CENTER_TILE_EPSILON: number = 5;
 // A "Creature" is a sprite that moves with and understands the grid system of the pacman game.
 export class Creature extends Phaser.Sprite {
     private map: map.PacMap;
+    private speed: number;
     public faceMovementDirection: boolean;
 
     constructor(game: Phaser.Game, map: map.PacMap, xtile: number, ytile: number, key: string){
@@ -19,7 +20,7 @@ export class Creature extends Phaser.Sprite {
 
         super(game, x, y, key); // Call the "Sprite" constructor.
         this.map = map;
-
+        this.speed = BASE_SPEED;
         this.faceMovementDirection = false;
 
         game.physics.enable(this, Phaser.Physics.ARCADE); // Turn on basic arcade physics for creatures.
@@ -35,6 +36,10 @@ export class Creature extends Phaser.Sprite {
     public getContainingTile(): map.TileView {
         // Since the anchor should be set to the middle to begin with, this.x and this.y should be at the center.
         return this.map.viewOfPixels(this.x, this.y);
+    }
+
+    public setSpeed(velocity: number): void {
+        this.speed = velocity;
     }
 
     // Centers the sprite on its current tile.
@@ -209,8 +214,12 @@ export class PlayerPacman extends Pacman {
 }
 
 export class Ghost extends DesiredDirectionCreature {
+    public afraid: boolean;
+    protected currentDirection: map.Direction;
     constructor(game: Phaser.Game, map: map.PacMap, xtile, ytile, key){
         super(game, map, xtile, ytile, key);
+        this.afraid = false;
+        this.currentDirection = null;
         this.animations.add('creep', [0,8,9,10,11,12,13,14],10, true);
         this.animations.add('blue', [1,15], 10, true);
         this.animations.add('blink', [2,3,1,15], 10, true);
@@ -255,6 +264,21 @@ export class Ghost extends DesiredDirectionCreature {
                 this.animations.play('westdead');
             }
     }
+    attemptDesiredDirection(): void {
+        if (this.desiredDirection != null)
+            this.currentDirection = this.desiredDirection;
+        super.attemptDesiredDirection();
+    }
+    runAway(): void {
+        let nextTile: map.TileView = this.getContainingTile().viewDirection(this.currentDirection);
+        while(!nextTile.isTraversable()) {
+            //console.log([this, this.currentDirection]);
+            this.currentDirection = map.randomDirection();
+            nextTile = this.getContainingTile().viewDirection(this.currentDirection);
+            this.setDesiredDirection(this.currentDirection);
+        }
+        if (!this.alive) this.setDeadGhostLook();
+    }
 }
 
 export class RandomGhost extends Ghost {
@@ -276,7 +300,6 @@ export class RandomGhost extends Ghost {
  */
 export class SimpleGhost extends Ghost {
     protected nextTile: map.TileView;
-    protected currentDirection: map.Direction;
 
     constructor(game: Phaser.Game, pmap: map.PacMap, xtile, ytile, key) {
         super(game, pmap, xtile, ytile, key);
@@ -310,44 +333,46 @@ export class ScanningGhost extends SimpleGhost {
     }
 
     update(){
-        if(this.isInSpawnBox()){
-            console.log('leaving box');
-            var neighbors = this.getContainingTile().adjacent();
-            for (var i=0; i<neighbors.length; i++){
-                if (neighbors[i].getTileId() == 0 && this.currentDirection != i){
-                    this.setDesiredDirection(i);
-                    this.currentDirection = i;
-                    break;
-                }
-                if (neighbors[i].isTraversable()) {
-                    var twoTilesAway = neighbors[i].adjacent();
-                    for (var j = 0; j < twoTilesAway.length; j++) {
-                        if (twoTilesAway[j].getTileId() == 0 && this.currentDirection != i) {
-                            this.setDesiredDirection(i);
-                            this.currentDirection = i;
-                            break;
+        if (!this.afraid && this.alive) {
+            if (this.isInSpawnBox()) {
+                console.log('leaving box');
+                var neighbors = this.getContainingTile().adjacent();
+                for (var i = 0; i < neighbors.length; i++) {
+                    if (neighbors[i].getTileId() == 0 && this.currentDirection != i) {
+                        this.setDesiredDirection(i);
+                        this.currentDirection = i;
+                        break;
+                    }
+                    if (neighbors[i].isTraversable()) {
+                        var twoTilesAway = neighbors[i].adjacent();
+                        for (var j = 0; j < twoTilesAway.length; j++) {
+                            if (twoTilesAway[j].getTileId() == 0 && this.currentDirection != i) {
+                                this.setDesiredDirection(i);
+                                this.currentDirection = i;
+                                break;
+                            }
                         }
                     }
                 }
+                //console.log(this.currentDirection);
+                this.checkNextTile();
             }
-            //console.log(this.currentDirection);
-            this.checkNextTile();
+            else
+                this.checkNextTile();
+            this.attemptDesiredDirection();
+            this.setGhostLook();
         }
-        else
-            this.checkNextTile();
-        //console.log(this.desiredDirection);
-        this.attemptDesiredDirection();
-        this.setGhostLook();
+        else {
+            this.runAway();
+            this.attemptDesiredDirection();
+        }
     }
 
     isInSpawnBox(): boolean {
-        if(this.getContainingTile().getTileId() == 6
+        return this.getContainingTile().getTileId() == 6
         || this.getContainingTile().getTileId() == 7
         || this.getContainingTile().getTileId() == 8
-        || this.getContainingTile().getTileId() == 9)
-        return true;
-    else
-        return false;
+        || this.getContainingTile().getTileId() == 9;
     }
 }
 
@@ -363,24 +388,29 @@ export class SearchGhost extends Ghost {
     }
 
     update(){
-        if(this.body.velocity.x == 0 && this.body.velocity.y == 0){
-            this.goal = null;
-            this.nextTile = null;
-        }
-        //console.log('path length', this.path.length);
-        if(this.goal == null) {
-            this.setNewGoal();
-            this.setNewPath();
-        }
-        while(this.nextTile == null) {
-            if (this.path.length == 0){
+        if (!this.afraid && this.alive) {
+            if (this.body.velocity.x == 0 && this.body.velocity.y == 0) {
+                this.goal = null;
                 this.nextTile = null;
-                break;
             }
-            //console.log(this.path);
-            this.nextTile = this.path.pop();
-            //console.log(this.nextTile);
-            this.moveToNextTile();
+            //console.log('path length', this.path.length);
+            if (this.goal == null) {
+                this.setNewGoal();
+                this.setNewPath();
+            }
+            while (this.nextTile == null) {
+                if (this.path.length == 0) {
+                    this.nextTile = null;
+                    break;
+                }
+                //console.log(this.path);
+                this.nextTile = this.path.pop();
+                //console.log(this.nextTile);
+                this.moveToNextTile();
+            }
+        }
+        else {
+            this.runAway();
         }
         this.attemptDesiredDirection();
     }
@@ -425,7 +455,8 @@ export class SearchGhost extends Ghost {
 
     attemptDesiredDirection(){
         super.attemptDesiredDirection();
-        if (this.nextTile === null){
+        if (this.afraid) return;
+        if (this.nextTile == null){
             return;
         }
         
@@ -433,8 +464,6 @@ export class SearchGhost extends Ghost {
             this.moveToNextTile();            
             this.setGhostLook();
         }
-
-        
     }
 }
 
@@ -483,5 +512,4 @@ export class SeekPacmanGhost extends SearchGhost {
         }
         this.goal = pacPos;
     }
-
 }
