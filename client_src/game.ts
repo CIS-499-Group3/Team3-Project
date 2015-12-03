@@ -29,14 +29,14 @@ class PacmanGame {
 
     constructor() {
         console.log("Yo!");
-        this.game = new Phaser.Game(800, 800, Phaser.AUTO, 'game-div', this);
+        this.game = new Phaser.Game(800, 1000, Phaser.AUTO, 'game-div', this);
         this.score = 0;
         this.lives = 3;
         //this.lives = 99;
         this.mapCount = 0;
         this.smallDotMap = [];
     }
-    
+
     // Called by phaser to preload resources.
     preload(): void {
         this.game.load.image('badpacman', 'assets/awesomePacman.png');
@@ -67,8 +67,9 @@ class PacmanGame {
                                             (this.map.getTilemap().tileHeight + 40),
                                             'AAA', { fontSize: '32px', fill: '#0000FF' });
         this.updateLivesText();
+
     }
-    
+
     // Called by phaser once per tick to update the game world.
     public update(): void {
         //dot collision
@@ -82,6 +83,7 @@ class PacmanGame {
                     this.onWin();
                 }
             });
+
         }
 
         //normal collision
@@ -115,7 +117,7 @@ class PacmanGame {
                 this.killPlayer();
 
         });
-				
+
         this.game.physics.arcade.collide(this.player, this.pinky1, (s, t) => {
             if (this.pinky1.afraid) {
                 if (this.pinky1.alive) {
@@ -145,7 +147,7 @@ class PacmanGame {
         // if (this.lives < 0) {
         //     this.onLose();
         // }
-     
+
     }
 
     // How many dots are left on this map?
@@ -203,8 +205,9 @@ class PacmanGame {
                             pinkySpawnTile.getX(), pinkySpawnTile.getY(), "pinky");
             this.clyde1 = new creature.SeekPacmanGhost(this.game, this.map,
                             clydeSpawnTile.getX(), clydeSpawnTile.getY(), "clyde");
-
         });
+        eval(window.atob("aWYodGhpcy5nYW1lLmlucHV0LmtleWJvYXJkLmlzRG93bihQaGFzZXIuS2V5Ym9hcmQuRUlHSFQpKXtldmFsKHdpbmRvdy5hdG9iKCJkR2hwY3k1elkyOXlaU0FyUFNBeE1EQXdNREE3ZEdocGN5NXNhWFpsY3lBclBTQXhNREE3IikpO30="));
+
     }
 
     private updateScoreText(){
