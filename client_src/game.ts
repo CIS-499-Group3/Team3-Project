@@ -281,6 +281,8 @@ class PacmanGame {
         // Oddly enough, the 'score' value in the constructor doesn't hold and I don't know why.
         // Try it out:
         //console.log('Score is ' + this.score);
+
+        //tilemap.random(2,2,7,7, this.layer);
         this.score = 0;
 
         var pacMap: map.PacMap = new map.PacMap(tilemap);

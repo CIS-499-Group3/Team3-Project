@@ -126,6 +126,9 @@ export class TileView {
 
     getTile(): Phaser.Tile {
         var tile = this.map.getTilemap().getTile(this.x, this.y);
+        if (tile === null){
+            return this.map.getTilemap().getTile(0, 0);
+        }
         return tile;
     }
 
