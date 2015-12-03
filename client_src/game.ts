@@ -93,65 +93,12 @@ class PacmanGame {
             console.log("Collide " + s + " " + t)
         });
 
-        //PacMan Death Collsion and Reset
-        this.game.physics.arcade.overlap(this.player, this.blinky1, (s, t) => {
-            if (this.blinky1.afraid) {
-                if (this.blinky1.alive) {
-                    this.blinky1.alive = false;
-                    this.blinky1.explode('edibleghostchunk');
-		    this.blinky1.destroy();
-                    this.score += 20;
-                    this.updateScoreText();
-                }
-            }
-            else
-                this.killPlayer();
-        });
+        //Handle collision with ghosts.
+        this.game.physics.arcade.overlap(this.player, this.blinky1, this.handleGhostCollide, null, this);
+        this.game.physics.arcade.overlap(this.player, this.inky1, this.handleGhostCollide, null, this);
+        this.game.physics.arcade.overlap(this.player, this.pinky1, this.handleGhostCollide, null, this);
+        this.game.physics.arcade.overlap(this.player, this.clyde1, this.handleGhostCollide, null, this);
 
-        this.game.physics.arcade.overlap(this.player, this.inky1, (s, t) => {
-            if (this.inky1.afraid) {
-                if (this.inky1.alive) {
-                    this.inky1.alive = false;
-                    this.inky1.explode('edibleghostchunk');
-		    this.inky1.destroy();
-                    this.score += 20;
-                    this.updateScoreText();
-                }
-            }
-            else
-                this.killPlayer();
-
-        });
-        this.game.physics.arcade.overlap(this.player, this.pinky1, (s, t) => {
-
-            if (this.pinky1.afraid) {
-                if (this.pinky1.alive) {
-                    this.pinky1.explode('edibleghostchunk');
-                    this.pinky1.alive = false;
-		    this.pinky1.destroy();
-                    this.score += 20;
-                    this.updateScoreText();
-                }
-            }
-            else
-                this.killPlayer();
-
-        });
-
-        this.game.physics.arcade.overlap(this.player, this.clyde1, (s, t) => {
-            if (this.clyde1.afraid) {
-                if (this.clyde1.alive) {
-                    this.clyde1.explode('edibleghostchunk');
-                    this.clyde1.alive = false;
-		    this.clyde1.destroy();
-                    this.score += 20;
-                    this.updateScoreText();
-                }
-            }
-            else
-                this.killPlayer();
-
-        });
 
         // if (this.lives < 0) {
         //     this.onLose();
@@ -242,6 +189,20 @@ class PacmanGame {
             this.respawnPlayer();
         }
 
+    }
+
+    private handleGhostCollide(player: creature.Pacman, ghost: creature.Ghost){
+        if (ghost.afraid) {
+            if (ghost.alive) {
+                ghost.explode('edibleghostchunk');
+                ghost.alive = false;
+                ghost.destroy();
+                this.score += 20;
+                this.updateScoreText();
+            }
+        } else {
+            this.killPlayer();
+        }
     }
 
     private onPowerPelletEaten(){
