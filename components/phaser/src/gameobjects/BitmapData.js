@@ -225,24 +225,23 @@ Phaser.BitmapData.prototype = {
     /**
     * Shifts the contents of this BitmapData by the distances given.
     * 
-    * The image will wrap-around the edges on all sides if the wrap argument is true (the default).
+    * The image will wrap-around the edges on all sides.
     *
     * @method Phaser.BitmapData#move
     * @param {integer} x - The amount of pixels to horizontally shift the canvas by. Use a negative value to shift to the left, positive to the right.
     * @param {integer} y - The amount of pixels to vertically shift the canvas by. Use a negative value to shift up, positive to shift down.
-    * @param {boolean} [wrap=true] - Wrap the content of the BitmapData.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
-    move: function (x, y, wrap) {
+    move: function (x, y) {
 
         if (x !== 0)
         {
-            this.moveH(x, wrap);
+            this.moveH(x);
         }
 
         if (y !== 0)
         {
-            this.moveV(y, wrap);
+            this.moveV(y);
         }
 
         return this;
@@ -252,16 +251,13 @@ Phaser.BitmapData.prototype = {
     /**
     * Shifts the contents of this BitmapData horizontally.
     * 
-    * The image will wrap-around the sides if the wrap argument is true (the default).
+    * The image will wrap-around the sides.
     *
     * @method Phaser.BitmapData#moveH
     * @param {integer} distance - The amount of pixels to horizontally shift the canvas by. Use a negative value to shift to the left, positive to the right.
-    * @param {boolean} [wrap=true] - Wrap the content of the BitmapData.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
-    moveH: function (distance, wrap) {
-
-        if (wrap === undefined) { wrap = true; }
+    moveH: function (distance) {
 
         var c = this._swapCanvas;
         var ctx = c.getContext('2d');
@@ -278,10 +274,7 @@ Phaser.BitmapData.prototype = {
             var w = this.width - distance;
 
             //  Left-hand chunk
-            if (wrap)
-            {
-                ctx.drawImage(src, 0, 0, distance, h, w, 0, distance, h);
-            }
+            ctx.drawImage(src, 0, 0, distance, h, w, 0, distance, h);
 
             //  Rest of the image
             ctx.drawImage(src, distance, 0, w, h, 0, 0, w, h);
@@ -292,10 +285,7 @@ Phaser.BitmapData.prototype = {
             var w = this.width - distance;
 
             //  Right-hand chunk
-            if (wrap)
-            {
-                ctx.drawImage(src, w, 0, distance, h, 0, 0, distance, h);
-            }
+            ctx.drawImage(src, w, 0, distance, h, 0, 0, distance, h);
 
             //  Rest of the image
             ctx.drawImage(src, 0, 0, w, h, distance, 0, w, h);
@@ -310,16 +300,13 @@ Phaser.BitmapData.prototype = {
     /**
     * Shifts the contents of this BitmapData vertically.
     * 
-    * The image will wrap-around the sides if the wrap argument is true (the default).
+    * The image will wrap-around the sides.
     *
     * @method Phaser.BitmapData#moveV
     * @param {integer} distance - The amount of pixels to vertically shift the canvas by. Use a negative value to shift up, positive to shift down.
-    * @param {boolean} [wrap=true] - Wrap the content of the BitmapData.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
-    moveV: function (distance, wrap) {
-
-        if (wrap === undefined) { wrap = true; }
+    moveV: function (distance) {
 
         var c = this._swapCanvas;
         var ctx = c.getContext('2d');
@@ -336,10 +323,7 @@ Phaser.BitmapData.prototype = {
             var h = this.height - distance;
 
             //  Top chunk
-            if (wrap)
-            {
-                ctx.drawImage(src, 0, 0, w, distance, 0, h, w, distance);
-            }
+            ctx.drawImage(src, 0, 0, w, distance, 0, h, w, distance);
 
             //  Rest of the image
             ctx.drawImage(src, 0, distance, w, h, 0, 0, w, h);
@@ -350,10 +334,7 @@ Phaser.BitmapData.prototype = {
             var h = this.height - distance;
 
             //  Bottom chunk
-            if (wrap)
-            {
-                ctx.drawImage(src, 0, h, w, distance, 0, 0, w, distance);
-            }
+            ctx.drawImage(src, 0, h, w, distance, 0, 0, w, distance);
 
             //  Rest of the image
             ctx.drawImage(src, 0, 0, w, h, 0, distance, w, h);
@@ -456,8 +437,6 @@ Phaser.BitmapData.prototype = {
         if (height === undefined) { height = this.height; }
 
         this.context.clearRect(x, y, width, height);
-
-        this.update();
 
         this.dirty = true;
 

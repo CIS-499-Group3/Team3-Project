@@ -12,6 +12,7 @@ export declare enum TileID {
 }
 export declare class PacMap {
     private tilemap;
+    private reportedPacmanPosition;
     constructor(tilemap: Phaser.Tilemap);
     getCorners(): TileView[];
     getTilemap(): Phaser.Tilemap;
@@ -26,6 +27,8 @@ export declare class PacMap {
     getPinkySpawns(): TileView[];
     getClydeSpawns(): TileView[];
     getPacmanSpawns(): TileView[];
+    reportPacmanPosition(tile: TileView): void;
+    getReportedPacmanPosition(): TileView;
 }
 export declare enum Direction {
     NORTH = 0,

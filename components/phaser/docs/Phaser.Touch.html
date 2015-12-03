@@ -39,10 +39,6 @@
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="Phaser.KeyCode.html">KeyCode</a>
-						</li>
-						
-						<li class="class-depth-0">
 							<a href="PIXI.html">PIXI</a>
 						</li>
 						
@@ -509,10 +505,6 @@
 						</li>
 						
 						<li class="class-depth-1">
-							<a href="Phaser.PointerMode.html">PointerMode</a>
-						</li>
-						
-						<li class="class-depth-1">
 							<a href="Phaser.Polygon.html">Polygon</a>
 						</li>
 						
@@ -762,6 +754,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.SpriteBatch.html">SpriteBatch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Stage.html">Stage</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1769,7 +1765,7 @@
 
     
     <div class="description">
-        <p>An array of callbacks that will be fired every time a native touch start or touch end event is received from the browser.
+        <p>An array of callbacks that will be fired every time a native touch start event is received from the browser.
 This is used internally to handle audio and video unlocking on mobile devices.
 To add a callback to this array please use <code>Touch.addTouchLockCallback</code>.</p>
     </div>
@@ -1943,7 +1939,7 @@ To add a callback to this array please use <code>Touch.addTouchLockCallback</cod
             
 <dt>
     <h4 class="name "
-        id="addTouchLockCallback"><span class="type-signature"></span>addTouchLockCallback<span class="signature">(callback, context, <span class="optional">onEnd</span>)</span><span class="type-signature"></span></h4>
+        id="addTouchLockCallback"><span class="type-signature"></span>addTouchLockCallback<span class="signature">(callback, context)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1952,7 +1948,7 @@ To add a callback to this array please use <code>Touch.addTouchLockCallback</cod
 
     
     <div class="description">
-        <p>Adds a callback that is fired when a browser touchstart or touchend event is received.</p>
+        <p>Adds a callback that is fired when a browser touchstart event is received.</p>
 <p>This is used internally to handle audio and video unlocking on mobile devices.</p>
 <p>If the callback returns 'true' then the callback is automatically deleted once invoked.</p>
 <p>The callback is added to the Phaser.Touch.touchLockCallbacks array and should be removed with Phaser.Touch.removeTouchLockCallback.</p>
@@ -1977,11 +1973,7 @@ To add a callback to this array please use <code>Touch.addTouchLockCallback</cod
 		<th>Type</th>
 
 		
-		<th>Argument</th>
-		
 
-		
-		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -2006,19 +1998,7 @@ To add a callback to this array please use <code>Touch.addTouchLockCallback</cod
             </td>
 
             
-                <td class="attributes">
-                
 
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
             
 
             <td class="description last"><p>The callback that will be called when a touchstart event is received.</p></td>
@@ -2041,61 +2021,10 @@ To add a callback to this array please use <code>Touch.addTouchLockCallback</cod
             </td>
 
             
-                <td class="attributes">
-                
 
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
             
 
             <td class="description last"><p>The context in which the callback will be called.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>onEnd</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-
-            <td class="description last"><p>Will the callback fire on a touchstart (default) or touchend event?</p></td>
         </tr>
 
 	
@@ -2318,7 +2247,7 @@ Occurs for example on iOS when you put down 4 fingers and the app selector UI ap
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Touch.js.html">input/Touch.js</a>, <a href="src_input_Touch.js.html#sunlight-1-line-293">line 293</a>
+    <a href="src_input_Touch.js.html">input/Touch.js</a>, <a href="src_input_Touch.js.html#sunlight-1-line-288">line 288</a>
     </dt>
     
 
@@ -2437,7 +2366,7 @@ Occurs for example on iOS when you put down 4 fingers and the app selector UI ap
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Touch.js.html">input/Touch.js</a>, <a href="src_input_Touch.js.html#sunlight-1-line-402">line 402</a>
+    <a href="src_input_Touch.js.html">input/Touch.js</a>, <a href="src_input_Touch.js.html#sunlight-1-line-397">line 397</a>
     </dt>
     
 
@@ -2557,7 +2486,7 @@ Doesn't appear to be supported by most browsers on a canvas element yet.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Touch.js.html">input/Touch.js</a>, <a href="src_input_Touch.js.html#sunlight-1-line-327">line 327</a>
+    <a href="src_input_Touch.js.html">input/Touch.js</a>, <a href="src_input_Touch.js.html#sunlight-1-line-322">line 322</a>
     </dt>
     
 
@@ -2677,7 +2606,7 @@ Doesn't appear to be supported by most browsers on a canvas element yet.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Touch.js.html">input/Touch.js</a>, <a href="src_input_Touch.js.html#sunlight-1-line-354">line 354</a>
+    <a href="src_input_Touch.js.html">input/Touch.js</a>, <a href="src_input_Touch.js.html#sunlight-1-line-349">line 349</a>
     </dt>
     
 
@@ -2796,7 +2725,7 @@ Doesn't appear to be supported by most browsers on a canvas element yet.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Touch.js.html">input/Touch.js</a>, <a href="src_input_Touch.js.html#sunlight-1-line-376">line 376</a>
+    <a href="src_input_Touch.js.html">input/Touch.js</a>, <a href="src_input_Touch.js.html#sunlight-1-line-371">line 371</a>
     </dt>
     
 
@@ -2915,7 +2844,7 @@ Doesn't appear to be supported by most browsers on a canvas element yet.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Touch.js.html">input/Touch.js</a>, <a href="src_input_Touch.js.html#sunlight-1-line-247">line 247</a>
+    <a href="src_input_Touch.js.html">input/Touch.js</a>, <a href="src_input_Touch.js.html#sunlight-1-line-244">line 244</a>
     </dt>
     
 
@@ -3077,7 +3006,7 @@ Doesn't appear to be supported by most browsers on a canvas element yet.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Touch.js.html">input/Touch.js</a>, <a href="src_input_Touch.js.html#sunlight-1-line-222">line 222</a>
+    <a href="src_input_Touch.js.html">input/Touch.js</a>, <a href="src_input_Touch.js.html#sunlight-1-line-219">line 219</a>
     </dt>
     
 
@@ -3217,7 +3146,7 @@ Doesn't appear to be supported by most browsers on a canvas element yet.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Touch.js.html">input/Touch.js</a>, <a href="src_input_Touch.js.html#sunlight-1-line-443">line 443</a>
+    <a href="src_input_Touch.js.html">input/Touch.js</a>, <a href="src_input_Touch.js.html#sunlight-1-line-426">line 426</a>
     </dt>
     
 
@@ -3266,7 +3195,7 @@ Doesn't appear to be supported by most browsers on a canvas element yet.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Thu Oct 15 2015 12:05:07 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Mon Aug 24 2015 15:36:56 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

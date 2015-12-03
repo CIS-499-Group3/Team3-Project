@@ -22,8 +22,10 @@ define(["require", "exports"], function (require, exports) {
             this.tilemap = tilemap;
         }
         PacMap.prototype.getCorners = function () {
-            return [this.viewOf(1, 1), this.viewOf(this.getWidth() - 2, 1), this.viewOf(1, this.getHeight() - 2),
-                this.viewOf(this.getHeight() - 2, this.getWidth() - 2)];
+            var qq = [this.viewOf(1, 1), this.viewOf(this.getWidth() - 2, 1), this.viewOf(1, this.getHeight() - 2),
+                this.viewOf(this.getWidth() - 2, this.getHeight() - 2)];
+            console.log(qq);
+            return qq;
         };
         PacMap.prototype.getTilemap = function () {
             return this.tilemap;
@@ -78,6 +80,12 @@ define(["require", "exports"], function (require, exports) {
         PacMap.prototype.getPacmanSpawns = function () {
             return this.allTilesWithID(TileID.PACMAN_SPAWN);
         };
+        PacMap.prototype.reportPacmanPosition = function (tile) {
+            this.reportedPacmanPosition = tile;
+        };
+        PacMap.prototype.getReportedPacmanPosition = function () {
+            return this.reportedPacmanPosition;
+        };
         return PacMap;
     })();
     exports.PacMap = PacMap;
@@ -100,7 +108,11 @@ define(["require", "exports"], function (require, exports) {
             this.map = map;
         }
         TileView.prototype.getTile = function () {
-            return this.map.getTilemap().getTile(this.x, this.y);
+            var tile = this.map.getTilemap().getTile(this.x, this.y);
+            if (tile === null) {
+                return this.map.getTilemap().getTile(0, 0);
+            }
+            return tile;
         };
         // Gets the tileset index of the tile.
         TileView.prototype.getTileId = function () {

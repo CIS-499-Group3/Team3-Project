@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-define(["require", "exports", './map', './astarsearch'], function (require, exports, map, search) {
+define(["require", "exports", './map', './astarsearch', './util'], function (require, exports, map, search, util) {
     var BASE_SPEED = 150;
     // Number of pixels a sprite can be away from the center of the tile to be counted as "at the center".
     // Smaller values will likely cause bugs as creatures skip over their turns.
@@ -18,6 +18,7 @@ define(["require", "exports", './map', './astarsearch'], function (require, expo
             var y = map.viewOf(xtile, ytile).getPixelY();
             _super.call(this, game, x, y, key); // Call the "Sprite" constructor.
             this.map = map;
+            this.speed = BASE_SPEED;
             this.faceMovementDirection = false;
             game.physics.enable(this, Phaser.Physics.ARCADE); // Turn on basic arcade physics for creatures.
             this.anchor = new Phaser.Point(0.5, 0.5); // Set the 'origin' of the sprite to the center of it.
@@ -31,6 +32,9 @@ define(["require", "exports", './map', './astarsearch'], function (require, expo
         Creature.prototype.getContainingTile = function () {
             // Since the anchor should be set to the middle to begin with, this.x and this.y should be at the center.
             return this.map.viewOfPixels(this.x, this.y);
+        };
+        Creature.prototype.setSpeed = function (velocity) {
+            this.speed = velocity;
         };
         // Centers the sprite on its current tile.
         Creature.prototype.centerOnTile = function () {
@@ -47,19 +51,19 @@ define(["require", "exports", './map', './astarsearch'], function (require, expo
             if (this.faceMovementDirection)
                 this.setFacing(direction);
             if (direction === map.Direction.NORTH) {
-                this.body.velocity.y = -BASE_SPEED;
+                this.body.velocity.y = -this.speed;
                 this.body.velocity.x = 0;
             }
             else if (direction === map.Direction.SOUTH) {
-                this.body.velocity.y = BASE_SPEED;
+                this.body.velocity.y = this.speed;
                 this.body.velocity.x = 0;
             }
             else if (direction === map.Direction.EAST) {
-                this.body.velocity.x = BASE_SPEED;
+                this.body.velocity.x = this.speed;
                 this.body.velocity.y = 0;
             }
             else if (direction === map.Direction.WEST) {
-                this.body.velocity.x = -BASE_SPEED;
+                this.body.velocity.x = -this.speed;
                 this.body.velocity.y = 0;
             }
             else {
@@ -147,6 +151,9 @@ define(["require", "exports", './map', './astarsearch'], function (require, expo
             this.scale.set(.5, .5); // This is just because our pacman image is 64x64.
             this.animations.add('move', [0, 1, 2, 1], 10, true);
         }
+        Pacman.prototype.update = function () {
+            this.getMap().reportPacmanPosition(this.getContainingTile());
+        };
         return Pacman;
     })(DesiredDirectionCreature);
     exports.Pacman = Pacman;
@@ -157,6 +164,7 @@ define(["require", "exports", './map', './astarsearch'], function (require, expo
             _super.call(this, game, map, xtile, ytile);
         }
         PlayerPacman.prototype.update = function () {
+            _super.prototype.update.call(this);
             // This is called by the Sprite class once every tick.
             if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
                 this.setDesiredDirection(map.Direction.WEST);
@@ -188,9 +196,67 @@ define(["require", "exports", './map', './astarsearch'], function (require, expo
         __extends(Ghost, _super);
         function Ghost(game, map, xtile, ytile, key) {
             _super.call(this, game, map, xtile, ytile, key);
-            this.animations.add('creep', [0, 1, 2, 3, 4, 5, 6, 7], 10, true);
+            this.afraid = false;
+            this.currentDirection = null;
+            this.animations.add('creep', [0, 8, 9, 10, 11, 12, 13, 14], 10, true);
+            this.animations.add('blue', [1, 15], 10, true);
+            this.animations.add('blink', [2, 3, 1, 15], 10, true);
             this.animations.play('creep');
+            //ghost directional animations
+            this.animations.add('northcreep', [0, 8], 10, true);
+            this.animations.add('eastcreep', [9, 10], 10, true);
+            this.animations.add('southcreep', [11, 12], 10, true);
+            this.animations.add('westcreep', [13, 14], 10, true);
+            //dead ghosts animations
+            this.animations.add('northdead', [4], 10, true);
+            this.animations.add('eastdead', [5], 10, true);
+            this.animations.add('southdead', [6], 10, true);
+            this.animations.add('westdead', [7], 10, true);
         }
+        Ghost.prototype.setGhostLook = function () {
+            if (this.desiredDirection == map.Direction.NORTH) {
+                this.animations.play('northcreep');
+            }
+            else if (this.desiredDirection == map.Direction.EAST) {
+                this.animations.play('eastcreep');
+            }
+            else if (this.desiredDirection == map.Direction.SOUTH) {
+                this.animations.play('southcreep');
+            }
+            else if (this.desiredDirection == map.Direction.WEST) {
+                this.animations.play('westcreep');
+            }
+        };
+        Ghost.prototype.setDeadGhostLook = function () {
+            if (this.desiredDirection == map.Direction.NORTH) {
+                this.animations.play('northdead');
+            }
+            else if (this.desiredDirection == map.Direction.EAST) {
+                this.animations.play('eastdead');
+            }
+            else if (this.desiredDirection == map.Direction.SOUTH) {
+                this.animations.play('southdead');
+            }
+            else if (this.desiredDirection == map.Direction.WEST) {
+                this.animations.play('westdead');
+            }
+        };
+        Ghost.prototype.attemptDesiredDirection = function () {
+            if (this.desiredDirection != null)
+                this.currentDirection = this.desiredDirection;
+            _super.prototype.attemptDesiredDirection.call(this);
+        };
+        Ghost.prototype.runAway = function () {
+            var nextTile = this.getContainingTile().viewDirection(this.currentDirection);
+            while (!nextTile.isTraversable()) {
+                //console.log([this, this.currentDirection]);
+                this.currentDirection = map.randomDirection();
+                nextTile = this.getContainingTile().viewDirection(this.currentDirection);
+                this.setDesiredDirection(this.currentDirection);
+            }
+            if (!this.alive)
+                this.setDeadGhostLook();
+        };
         return Ghost;
     })(DesiredDirectionCreature);
     exports.Ghost = Ghost;
@@ -246,42 +312,45 @@ define(["require", "exports", './map', './astarsearch'], function (require, expo
             _super.call(this, game, pmap, xtile, ytile, key);
         }
         ScanningGhost.prototype.update = function () {
-            if (this.isInSpawnBox()) {
-                console.log('leaving box');
-                var neighbors = this.getContainingTile().adjacent();
-                for (var i = 0; i < neighbors.length; i++) {
-                    if (neighbors[i].getTileId() == 0 && this.currentDirection != i) {
-                        this.setDesiredDirection(i);
-                        this.currentDirection = i;
-                        break;
-                    }
-                    if (neighbors[i].isTraversable()) {
-                        var twoTilesAway = neighbors[i].adjacent();
-                        for (var j = 0; j < twoTilesAway.length; j++) {
-                            if (twoTilesAway[j].getTileId() == 0 && this.currentDirection != i) {
-                                this.setDesiredDirection(i);
-                                this.currentDirection = i;
-                                break;
+            if (!this.afraid && this.alive) {
+                if (this.isInSpawnBox()) {
+                    console.log('leaving box');
+                    var neighbors = this.getContainingTile().adjacent();
+                    for (var i = 0; i < neighbors.length; i++) {
+                        if (neighbors[i].getTileId() == 0 && this.currentDirection != i) {
+                            this.setDesiredDirection(i);
+                            this.currentDirection = i;
+                            break;
+                        }
+                        if (neighbors[i].isTraversable()) {
+                            var twoTilesAway = neighbors[i].adjacent();
+                            for (var j = 0; j < twoTilesAway.length; j++) {
+                                if (twoTilesAway[j].getTileId() == 0 && this.currentDirection != i) {
+                                    this.setDesiredDirection(i);
+                                    this.currentDirection = i;
+                                    break;
+                                }
                             }
                         }
                     }
+                    //console.log(this.currentDirection);
+                    this.checkNextTile();
                 }
-                //console.log(this.currentDirection);
-                this.checkNextTile();
+                else
+                    this.checkNextTile();
+                this.attemptDesiredDirection();
+                this.setGhostLook();
             }
-            else
-                this.checkNextTile();
-            //console.log(this.desiredDirection);
-            this.attemptDesiredDirection();
+            else {
+                this.runAway();
+                this.attemptDesiredDirection();
+            }
         };
         ScanningGhost.prototype.isInSpawnBox = function () {
-            if (this.getContainingTile().getTileId() == 6
+            return this.getContainingTile().getTileId() == 6
                 || this.getContainingTile().getTileId() == 7
                 || this.getContainingTile().getTileId() == 8
-                || this.getContainingTile().getTileId() == 9)
-                return true;
-            else
-                return false;
+                || this.getContainingTile().getTileId() == 9;
         };
         return ScanningGhost;
     })(SimpleGhost);
@@ -295,30 +364,39 @@ define(["require", "exports", './map', './astarsearch'], function (require, expo
             this.nextTile = null;
         }
         SearchGhost.prototype.update = function () {
-            if (this.body.velocity.x == 0 && this.body.velocity.y == 0) {
-                this.goal = null;
-                this.nextTile = null;
+            if (!this.afraid && this.alive) {
+                if (this.body.velocity.x == 0 && this.body.velocity.y == 0) {
+                    this.goal = null;
+                    this.nextTile = null;
+                }
+                //console.log('path length', this.path.length);
+                if (this.goal == null) {
+                    this.setNewGoal();
+                    this.setNewPath();
+                }
+                while (this.nextTile == null) {
+                    if (this.path.length == 0) {
+                        this.nextTile = null;
+                        break;
+                    }
+                    //console.log(this.path);
+                    this.nextTile = this.path.pop();
+                    //console.log(this.nextTile);
+                    this.moveToNextTile();
+                }
             }
-            //console.log('path length', this.path.length);
-            if (this.goal == null) {
-                this.setNewGoal();
-                this.setNewPath();
-            }
-            while (this.nextTile == null) {
-                //console.log(this.path);
-                this.nextTile = this.path.pop();
-                //console.log(this.nextTile);
-                this.moveToNextTile();
+            else {
+                this.runAway();
             }
             this.attemptDesiredDirection();
         };
         SearchGhost.prototype.setNewGoal = function () {
         };
         SearchGhost.prototype.setNewPath = function () {
-            //console.log('current tile', this.getContainingTile());
-            //console.log('goal', this.goal);
+            if (this.goal === this.getContainingTile()) {
+                console.log("Same");
+            }
             this.path = search.findPathToPosition(this.getContainingTile(), this.goal);
-            //console.log('path', this.path);
         };
         SearchGhost.prototype.moveToNextTile = function () {
             if (this.path.length > 0) {
@@ -346,9 +424,21 @@ define(["require", "exports", './map', './astarsearch'], function (require, expo
         };
         SearchGhost.prototype.attemptDesiredDirection = function () {
             _super.prototype.attemptDesiredDirection.call(this);
+            if (this.afraid)
+                return;
+            if (this.nextTile == null || this.getContainingTile() == null) {
+                return;
+            }
             if (this.getContainingTile().getTile() == this.nextTile.getTile()) {
                 this.moveToNextTile();
+                this.setGhostLook();
             }
+        };
+        SearchGhost.prototype.runAway = function () {
+            _super.prototype.runAway.call(this);
+            this.goal = null;
+            this.path = [];
+            this.nextTile = null;
         };
         return SearchGhost;
     })(Ghost);
@@ -368,5 +458,37 @@ define(["require", "exports", './map', './astarsearch'], function (require, expo
         return CornersGhost;
     })(SearchGhost);
     exports.CornersGhost = CornersGhost;
+    var CornersGhostChange = (function (_super) {
+        __extends(CornersGhostChange, _super);
+        function CornersGhostChange(game, pmap, xtile, ytile, key) {
+            _super.call(this, game, pmap, xtile, ytile, key);
+            this.corners = [2, 0, 1, 3];
+            this.count = 0;
+        }
+        CornersGhostChange.prototype.setNewGoal = function () {
+            //console.log(this);
+            this.goal = this.getMap().getCorners()[this.corners[this.count % 4]];
+            this.count = this.count + 1;
+        };
+        return CornersGhostChange;
+    })(SearchGhost);
+    exports.CornersGhostChange = CornersGhostChange;
+    var SeekPacmanGhost = (function (_super) {
+        __extends(SeekPacmanGhost, _super);
+        function SeekPacmanGhost(game, pmap, xtile, ytile, key) {
+            _super.call(this, game, pmap, xtile, ytile, key);
+            this.speed -= 5;
+        }
+        SeekPacmanGhost.prototype.setNewGoal = function () {
+            var pacPos = this.getMap().getReportedPacmanPosition();
+            if (!pacPos) {
+                // If pacman position is unknown, go to random corner.
+                pacPos = util.randomChoice(this.getMap().getCorners());
+            }
+            this.goal = pacPos;
+        };
+        return SeekPacmanGhost;
+    })(SearchGhost);
+    exports.SeekPacmanGhost = SeekPacmanGhost;
 });
 //# sourceMappingURL=creature.js.map

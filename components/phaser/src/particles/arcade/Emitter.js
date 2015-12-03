@@ -536,23 +536,12 @@ Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, f
 };
 
 /**
-* This function is used internally to emit the next particle in the queue.
-*
-* However it can also be called externally to emit a particle.
-*
-* When called externally you can use the arguments to override any defaults the Emitter has set.
+* This function can be used both internally and externally to emit the next particle in the queue.
 *
 * @method Phaser.Particles.Arcade.Emitter#emitParticle
-* @param {number} [x] - The x coordinate to emit the particle from. If `null` or `undefined` it will use `Emitter.emitX` or if the Emitter has a width > 1 a random value between `Emitter.left` and `Emitter.right`.
-* @param {number} [y] - The y coordinate to emit the particle from. If `null` or `undefined` it will use `Emitter.emitY` or if the Emitter has a height > 1 a random value between `Emitter.top` and `Emitter.bottom`.
-* @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - This is the image or texture used by the Particle during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
-* @param {string|number} [frame] - If this Particle is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 * @return {boolean} True if a particle was emitted, otherwise false.
 */
-Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, frame) {
-
-    if (x === undefined) { x = null; }
-    if (y === undefined) { y = null; }
+Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
 
     var particle = this.getFirstExists(false);
 
@@ -561,39 +550,14 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, fr
         return false;
     }
 
-    var rnd = this.game.rnd;
-
-    if (key !== undefined && frame !== undefined)
+    if (this.width > 1 || this.height > 1)
     {
-        particle.loadTexture(key, frame);
+        particle.reset(this.game.rnd.integerInRange(this.left, this.right), this.game.rnd.integerInRange(this.top, this.bottom));
     }
-    else if (key !== undefined)
+    else
     {
-        particle.loadTexture(key);
+        particle.reset(this.emitX, this.emitY);
     }
-
-    var emitX = this.emitX;
-    var emitY = this.emitY;
-
-    if (x !== null)
-    {
-        emitX = x;
-    }
-    else if (this.width > 1)
-    {
-        emitX = rnd.between(this.left, this.right);
-    }
-
-    if (y !== null)
-    {
-        emitY = y;
-    }
-    else if (this.height > 1)
-    {
-        emitY = rnd.between(this.top, this.bottom);
-    }
-
-    particle.reset(emitX, emitY);
 
     particle.angle = 0;
     particle.lifespan = this.lifespan;
@@ -613,23 +577,20 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, fr
     }
     else if (this.minParticleScale !== 1 || this.maxParticleScale !== 1)
     {
-        particle.scale.set(rnd.realInRange(this.minParticleScale, this.maxParticleScale));
+        particle.scale.set(this.game.rnd.realInRange(this.minParticleScale, this.maxParticleScale));
     }
     else if ((this._minParticleScale.x !== this._maxParticleScale.x) || (this._minParticleScale.y !== this._maxParticleScale.y))
     {
-        particle.scale.set(rnd.realInRange(this._minParticleScale.x, this._maxParticleScale.x), rnd.realInRange(this._minParticleScale.y, this._maxParticleScale.y));
+        particle.scale.set(this.game.rnd.realInRange(this._minParticleScale.x, this._maxParticleScale.x), this.game.rnd.realInRange(this._minParticleScale.y, this._maxParticleScale.y));
     }
 
-    if (frame === undefined)
+    if (Array.isArray(this._frames === 'object'))
     {
-        if (Array.isArray(this._frames))
-        {
-            particle.frame = this.game.rnd.pick(this._frames);
-        }
-        else
-        {
-            particle.frame = this._frames;
-        }
+        particle.frame = this.game.rnd.pick(this._frames);
+    }
+    else
+    {
+        particle.frame = this._frames;
     }
 
     if (this.autoAlpha)
@@ -638,24 +599,25 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, fr
     }
     else
     {
-        particle.alpha = rnd.realInRange(this.minParticleAlpha, this.maxParticleAlpha);
+        particle.alpha = this.game.rnd.realInRange(this.minParticleAlpha, this.maxParticleAlpha);
     }
 
     particle.blendMode = this.blendMode;
 
-    var body = particle.body;
+    particle.body.updateBounds();
 
-    body.updateBounds();
+    particle.body.bounce.setTo(this.bounce.x, this.bounce.y);
 
-    body.bounce.copyFrom(this.bounce);
-    body.drag.copyFrom(this.particleDrag);
+    particle.body.velocity.x = this.game.rnd.between(this.minParticleSpeed.x, this.maxParticleSpeed.x);
+    particle.body.velocity.y = this.game.rnd.between(this.minParticleSpeed.y, this.maxParticleSpeed.y);
+    particle.body.angularVelocity = this.game.rnd.between(this.minRotation, this.maxRotation);
 
-    body.velocity.x = rnd.between(this.minParticleSpeed.x, this.maxParticleSpeed.x);
-    body.velocity.y = rnd.between(this.minParticleSpeed.y, this.maxParticleSpeed.y);
-    body.angularVelocity = rnd.between(this.minRotation, this.maxRotation);
+    particle.body.gravity.y = this.gravity;
 
-    body.gravity.y = this.gravity;
-    body.angularDrag = this.angularDrag;
+    particle.body.drag.x = this.particleDrag.x;
+    particle.body.drag.y = this.particleDrag.y;
+
+    particle.body.angularDrag = this.angularDrag;
 
     particle.onEmit();
 

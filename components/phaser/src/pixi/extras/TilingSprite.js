@@ -174,7 +174,7 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
 
     if (this.refreshTexture)
     {
-        this.generateTilingTexture(true, renderSession);
+        this.generateTilingTexture(true);
 
         if (this.tilingTexture)
         {
@@ -243,7 +243,7 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
 
     if (this.refreshTexture)
     {
-        this.generateTilingTexture(false, renderSession);
+        this.generateTilingTexture(false);
     
         if (this.tilingTexture)
         {
@@ -332,9 +332,8 @@ PIXI.TilingSprite.prototype.onTextureUpdate = function()
 * @method generateTilingTexture
 * 
 * @param forcePowerOfTwo {Boolean} Whether we want to force the texture to be a power of two
-* @param renderSession {RenderSession} 
 */
-PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo, renderSession)
+PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
 {
     if (!this.texture.baseTexture.hasLoaded)
     {
@@ -372,6 +371,7 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo, re
     else
     {
         this.canvasBuffer = new PIXI.CanvasBuffer(targetWidth, targetHeight);
+        this.tilingTexture = PIXI.Texture.fromCanvas(this.canvasBuffer.canvas);
         this.tilingTexture = PIXI.Texture.fromCanvas(this.canvasBuffer.canvas);
         this.tilingTexture.isTiling = true;
         this.tilingTexture.needsUpdate = true;
@@ -492,13 +492,9 @@ PIXI.TilingSprite.prototype.getBounds = function()
 
 PIXI.TilingSprite.prototype.destroy = function () {
 
-    PIXI.Sprite.prototype.destroy.call(this);
+    this.canvasBuffer.destroy();
 
-    if (this.canvasBuffer)
-    {
-        this.canvasBuffer.destroy();
-        this.canvasBuffer = null;
-    }
+    PIXI.Sprite.prototype.destroy.call(this);
 
     this.tileScale = null;
     this.tileScaleOffset = null;

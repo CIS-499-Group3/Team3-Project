@@ -10,7 +10,7 @@
 * @class Phaser.Key
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
-* @param {integer} keycode - The key code this Key is responsible for. See {@link Phaser.KeyCode}.
+* @param {number} keycode - The key code this Key is responsible for.
 */
 Phaser.Key = function (game, keycode) {
 

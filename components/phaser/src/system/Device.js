@@ -58,12 +58,6 @@ Phaser.Device = function () {
     this.iOS = false;
 
     /**
-    * @property {number} iOSVersion - If running in iOS this will contain the major version number.
-    * @default
-    */
-    this.iOSVersion = 0;
-
-    /**
     * @property {boolean} cocoonJS - Is the game running under CocoonJS?
     * @default
     */
@@ -664,8 +658,6 @@ Phaser.Device._initialize = function () {
         else if (/iP[ao]d|iPhone/i.test(ua))
         {
             device.iOS = true;
-            (navigator.appVersion).match(/OS (\d+)/);
-            device.iOSVersion = parseInt(RegExp.$1, 10);
         }
         else if (/Linux/.test(ua))
         {

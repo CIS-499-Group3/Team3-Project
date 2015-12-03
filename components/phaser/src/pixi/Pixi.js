@@ -19,13 +19,6 @@
 var PIXI = PIXI || {};
 
 /**
- * A reference to the Phaser Game instance that owns this Pixi renderer.
- * @property {Phaser.Game} game
- * @static 
- */
-PIXI.game = null;
-
-/**
  * @property {Number} WEBGL_RENDERER
  * @protected
  * @static 
@@ -44,7 +37,7 @@ PIXI.CANVAS_RENDERER = 1;
  * @property {String} VERSION
  * @static 
  */
-PIXI.VERSION = "v2.2.9";
+PIXI.VERSION = "v2.2.8";
 
 // used to create uids for various pixi objects.
 PIXI._UID = 0;
@@ -106,6 +99,7 @@ PIXI.RETINA_PREFIX = "@2x";
  * @property {Boolean} defaultRenderOptions.clearBeforeRender=true
  * @property {Boolean} defaultRenderOptions.autoResize=false
  * @static
+ */
 PIXI.defaultRenderOptions = {
     view: null,
     transparent: false,
@@ -115,4 +109,3 @@ PIXI.defaultRenderOptions = {
     clearBeforeRender: true,
     autoResize: false
 };
- */

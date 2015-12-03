@@ -42,11 +42,7 @@ PIXI.WebGLBlendModeManager.prototype.setBlendMode = function(blendMode)
     this.currentBlendMode = blendMode;
     
     var blendModeWebGL = PIXI.blendModesWebGL[this.currentBlendMode];
-
-    if (blendModeWebGL)
-    {
-        this.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
-    }
+    this.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
     
     return true;
 };

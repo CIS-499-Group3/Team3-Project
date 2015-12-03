@@ -265,15 +265,7 @@ Phaser.SoundManager.prototype = {
     */
     setTouchLock: function () {
 
-        if (this.game.device.iOSVersion > 8)
-        {
-            this.game.input.touch.addTouchLockCallback(this.unlock, this, true);
-        }
-        else
-        {
-            this.game.input.touch.addTouchLockCallback(this.unlock, this);
-        }
-
+        this.game.input.touch.addTouchLockCallback(this.unlock, this);
         this.touchLocked = true;
 
     },

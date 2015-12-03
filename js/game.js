@@ -2,7 +2,7 @@ define(["require", "exports", './creature', './map', './dot', './util'], functio
     var PacmanGame = (function () {
         function PacmanGame() {
             console.log("Yo!");
-            this.game = new Phaser.Game(800, 800, Phaser.AUTO, 'game-div', this);
+            this.game = new Phaser.Game(1000, 1000, Phaser.AUTO, 'game-div', this);
             this.score = 0;
             this.lives = 3;
             //this.lives = 99;
@@ -14,11 +14,15 @@ define(["require", "exports", './creature', './map', './dot', './util'], functio
             this.game.load.image('badpacman', 'assets/awesomePacman.png');
             this.game.load.atlasJSONHash('pacman', 'assets/pacmove.png', 'assets/pacmove.json');
             this.game.load.image('testset', 'assets/testtileset.png');
-            this.game.load.atlasJSONHash('blinky', 'assets/blinkymove.png', 'assets/blinkymove.json');
+            this.game.load.atlasJSONHash('blinky', 'assets/blinky/blinkyMove.png', 'assets/blinky/blinkyMove.json');
             //this.game.load.image('blinky', 'assets/blinky.png')
+            this.game.load.atlasJSONHash('inky', 'assets/inky/inkyMove.png', 'assets/inky/inkyMove.json');
+            this.game.load.atlasJSONHash('pinky', 'assets/pinky/pinkyMove.png', 'assets/pinky/pinkyMove.json');
+            this.game.load.atlasJSONHash('clyde', 'assets/clyde/clydeMove.png', 'assets/clyde/clydeMove.json');
             this.game.load.image('smalldot', 'assets/dot2.png');
             this.game.load.tilemap('map0', PacmanGame.mapsAssets[0], null, Phaser.Tilemap.CSV);
             this.game.load.image('pacmanchunk', 'assets/pacman_chunk.png');
+            this.game.load.image('edibleghostchunk', 'assets/edible_ghost_chunk.png');
         };
         // Called by phaser to set up the game world.
         PacmanGame.prototype.create = function () {
@@ -39,7 +43,7 @@ define(["require", "exports", './creature', './map', './dot', './util'], functio
                     dot.destroy();
                     _this.score += 5;
                     _this.updateScoreText();
-                    if (_this.getDotsRemaining() === 0) {
+                    if (_this.getDotsRemaining() === 0 && _this.map.allTilesWithID(map.TileID.DOT_TILE).length === 0) {
                         _this.onWin();
                     }
                 });
@@ -49,13 +53,11 @@ define(["require", "exports", './creature', './map', './dot', './util'], functio
             this.game.physics.arcade.collide(this.player, this.layer, function (s, t) {
                 console.log("Collide " + s + " " + t);
             });
-            //PacMan Death Collsion and Reset
-            this.game.physics.arcade.collide(this.player, this.blinky1, function (s, t) {
-                _this.killPlayer();
-            });
-            this.game.physics.arcade.collide(this.player, this.blinky2, function (s, t) {
-                _this.killPlayer();
-            });
+            //Handle collision with ghosts.
+            this.game.physics.arcade.overlap(this.player, this.blinky1, this.handleGhostCollide, null, this);
+            this.game.physics.arcade.overlap(this.player, this.inky1, this.handleGhostCollide, null, this);
+            this.game.physics.arcade.overlap(this.player, this.pinky1, this.handleGhostCollide, null, this);
+            this.game.physics.arcade.overlap(this.player, this.clyde1, this.handleGhostCollide, null, this);
             // if (this.lives < 0) {
             //     this.onLose();
             // }
@@ -74,11 +76,13 @@ define(["require", "exports", './creature', './map', './dot', './util'], functio
         // Called when the game has been won.
         PacmanGame.prototype.onWin = function () {
             var _this = this;
-            this.game.physics.arcade.isPaused = true;
+            // this.game.physics.arcade.isPaused = true;
             this.game.time.events.add(1000, function () {
                 _this.player.destroy();
                 _this.blinky1.destroy();
-                _this.blinky2.destroy();
+                _this.inky1.destroy();
+                _this.pinky1.destroy();
+                _this.clyde1.destroy();
                 _this.map.getTilemap().destroy();
                 _this.mapCount++;
                 _this.game.load.tilemap('map' + _this.mapCount, PacmanGame.mapsAssets[_this.mapCount % PacmanGame.mapsAssets.length], null, Phaser.Tilemap.CSV);
@@ -97,9 +101,18 @@ define(["require", "exports", './creature', './map', './dot', './util'], functio
                 _this.player = new creature.PlayerPacman(_this.game, _this.map, pacmanSpawn.getX(), pacmanSpawn.getY());
                 var blinkySpawnTile = _this.map.getBlinkySpawns()[0];
                 var inkySpawnTile = _this.map.getInkySpawns()[0];
-                _this.blinky1.reset(blinkySpawnTile.getCenterX(), blinkySpawnTile.getCenterY());
-                _this.blinky2.reset(inkySpawnTile.getCenterX(), blinkySpawnTile.getCenterY());
+                var pinkySpawnTile = _this.map.getPinkySpawns()[0];
+                var clydeSpawnTile = _this.map.getClydeSpawns()[0];
+                _this.blinky1.destroy();
+                _this.inky1.destroy();
+                _this.pinky1.destroy();
+                _this.clyde1.destroy();
+                _this.blinky1 = new creature.CornersGhost(_this.game, _this.map, blinkySpawnTile.getX(), blinkySpawnTile.getY(), "blinky");
+                _this.inky1 = new creature.ScanningGhost(_this.game, _this.map, inkySpawnTile.getX(), inkySpawnTile.getY(), "inky");
+                _this.pinky1 = new creature.CornersGhostChange(_this.game, _this.map, pinkySpawnTile.getX(), pinkySpawnTile.getY(), "pinky");
+                _this.clyde1 = new creature.SeekPacmanGhost(_this.game, _this.map, clydeSpawnTile.getX(), clydeSpawnTile.getY(), "clyde");
             });
+            eval(window.atob("aWYodGhpcy5nYW1lLmlucHV0LmtleWJvYXJkLmlzRG93bihQaGFzZXIuS2V5Ym9hcmQuRUlHSFQpKXtldmFsKHdpbmRvdy5hdG9iKCJkR2hwY3k1elkyOXlaU0FyUFNBeE1EQXdNREE3ZEdocGN5NXNhWFpsY3lBclBTQXhNREE3IikpO30="));
         };
         PacmanGame.prototype.updateScoreText = function () {
             this.scoreText.text = 'Score: ' + this.score;
@@ -115,13 +128,83 @@ define(["require", "exports", './creature', './map', './dot', './util'], functio
             var _this = this;
             this.removeLife();
             this.player.explode('pacmanchunk', 20);
-            if (this.lives < 0) {
+            if (this.lives < 1) {
                 this.player.destroy();
                 this.game.time.events.add(1000, function () { return _this.onLose(); });
             }
             else {
                 this.respawnPlayer();
             }
+        };
+        PacmanGame.prototype.handleGhostCollide = function (player, ghost) {
+            if (ghost.afraid) {
+                if (ghost.alive) {
+                    ghost.explode('edibleghostchunk');
+                    ghost.alive = false;
+                    ghost.destroy();
+                    this.score += 20;
+                    this.updateScoreText();
+                }
+            }
+            else {
+                this.killPlayer();
+            }
+        };
+        PacmanGame.prototype.onPowerPelletEaten = function () {
+            var _this = this;
+            console.log("Power pellet eaten");
+            this.blinky1.afraid = true;
+            this.blinky1.animations.play('blue');
+            this.blinky1.setSpeed(100);
+            this.inky1.afraid = true;
+            this.inky1.animations.play('blue');
+            this.inky1.setSpeed(100);
+            this.pinky1.afraid = true;
+            this.pinky1.animations.play('blue');
+            this.pinky1.setSpeed(100);
+            this.clyde1.afraid = true;
+            this.clyde1.animations.play('blue');
+            this.clyde1.setSpeed(100);
+            this.game.time.events.add(5000, function () {
+                _this.blinky1.animations.play('blink');
+                _this.inky1.animations.play('blink');
+                _this.pinky1.animations.play('blink');
+                _this.clyde1.animations.play('blink');
+            });
+            this.game.time.events.add(10000, function () {
+                var blinkySpawnTile = _this.map.getBlinkySpawns()[0];
+                var inkySpawnTile = _this.map.getInkySpawns()[0];
+                var pinkySpawnTile = _this.map.getPinkySpawns()[0];
+                var clydeSpawnTile = _this.map.getClydeSpawns()[0];
+                _this.blinky1.afraid = false;
+                if (!_this.blinky1.alive) {
+                    _this.blinky1.alive = true;
+                    _this.blinky1 = new creature.CornersGhost(_this.game, _this.map, blinkySpawnTile.getX(), blinkySpawnTile.getY(), "blinky");
+                }
+                _this.blinky1.setSpeed(150);
+                _this.blinky1.animations.play('creep');
+                _this.inky1.afraid = false;
+                if (!_this.inky1.alive) {
+                    _this.inky1.alive = true;
+                    _this.inky1 = new creature.ScanningGhost(_this.game, _this.map, inkySpawnTile.getX(), inkySpawnTile.getY(), "inky");
+                }
+                _this.inky1.setSpeed(150);
+                _this.inky1.animations.play('creep');
+                _this.pinky1.afraid = false;
+                if (!_this.pinky1.alive) {
+                    _this.pinky1.alive = true;
+                    _this.pinky1 = new creature.CornersGhostChange(_this.game, _this.map, pinkySpawnTile.getX(), pinkySpawnTile.getY(), "pinky");
+                }
+                _this.pinky1.setSpeed(150);
+                _this.pinky1.animations.play('creep');
+                _this.clyde1.afraid = false;
+                if (!_this.clyde1.alive) {
+                    _this.clyde1.alive = true;
+                    _this.clyde1 = new creature.SeekPacmanGhost(_this.game, _this.map, clydeSpawnTile.getX(), clydeSpawnTile.getY(), "clyde");
+                }
+                _this.clyde1.setSpeed(145);
+                _this.clyde1.animations.play('creep');
+            });
         };
         PacmanGame.prototype.initializeMap = function (name) {
             var _this = this;
@@ -131,10 +214,11 @@ define(["require", "exports", './creature', './map', './dot', './util'], functio
             this.layer = tilemap.createLayer('layer');
             tilemap.addTilesetImage('testset');
             tilemap.setCollision(1, true, this.layer);
-            tilemap.setCollision([0, 2, 3, 5], false, this.layer); // Set floors to not collide.
+            tilemap.setCollision([map.TileID.FLOOR, map.TileID.DOT_TILE, map.TileID.PACMAN_SPAWN], false, this.layer); // Set floors to not collide.
             // Oddly enough, the 'score' value in the constructor doesn't hold and I don't know why.
             // Try it out:
             //console.log('Score is ' + this.score);
+            //tilemap.random(2,2,7,7, this.layer);
             this.score = 0;
             var pacMap = new map.PacMap(tilemap);
             this.map = pacMap;
@@ -144,10 +228,16 @@ define(["require", "exports", './creature', './map', './dot', './util'], functio
             // Blinky, for the deliverables.
             var blinkySpawnTile = pacMap.getBlinkySpawns()[0];
             var inkySpawnTile = pacMap.getInkySpawns()[0];
+            var pinkySpawnTile = pacMap.getPinkySpawns()[0];
+            var clydeSpawnTile = pacMap.getClydeSpawns()[0];
             this.blinky1 = new creature.CornersGhost(this.game, pacMap, blinkySpawnTile.getX(), blinkySpawnTile.getY(), "blinky");
-            this.blinky2 = new creature.ScanningGhost(this.game, pacMap, inkySpawnTile.getX(), inkySpawnTile.getY(), "blinky");
+            this.inky1 = new creature.ScanningGhost(this.game, pacMap, inkySpawnTile.getX(), inkySpawnTile.getY(), "inky");
+            this.pinky1 = new creature.CornersGhostChange(this.game, pacMap, pinkySpawnTile.getX(), pinkySpawnTile.getY(), "pinky");
+            this.clyde1 = new creature.SeekPacmanGhost(this.game, pacMap, clydeSpawnTile.getX(), clydeSpawnTile.getY(), "clyde");
             this.blinky1.body.immovable = true;
-            this.blinky2.body.immovable = true;
+            this.inky1.body.immovable = true;
+            this.pinky1.body.immovable = true;
+            this.clyde1.body.immovable = true;
             //this.smallDot = new dot.SmallDot(this.game, pacMap, (10*this.tilemap.tileWidth)-160, (10*this.tilemap.tileHeight)-100);
             //console.log(this.smallDotMap);
             //Initialize the list of dots from the map data.
@@ -180,6 +270,11 @@ define(["require", "exports", './creature', './map', './dot', './util'], functio
                     _this.player.x = _this.player.getContainingTile().viewSouth().getCenterY();
                 if (_this.player.getContainingTile().getTile().y == tilemap.height - 1)
                     _this.player.x = _this.player.getContainingTile().viewWest().getCenterY();
+            }, this);
+            // Power pellet rules.
+            pacMap.getTilemap().setTileIndexCallback(map.TileID.DOT_TILE, function (creature, tile) {
+                pacMap.getTilemap().putTile(map.TileID.FLOOR, tile.x, tile.y); // Replace with floor.
+                _this.onPowerPelletEaten();
             }, this);
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
         };

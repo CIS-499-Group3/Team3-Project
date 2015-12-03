@@ -65,6 +65,15 @@ Phaser.DeviceButton = function (parent, buttonCode) {
     this.timeDown = 0;
 
     /**
+    * If the button is down this value holds the duration of that button press and is constantly updated.
+    * If the button is up it holds the duration of the previous down session.
+    * The value is stored in milliseconds.
+    * @property {number} duration
+    * @default
+    */
+    this.duration = 0;
+
+    /**
     * @property {number} timeUp - The timestamp when the button was last released.
     * @default
     */
@@ -160,6 +169,7 @@ Phaser.DeviceButton.prototype = {
         this.isDown = true;
         this.isUp = false;
         this.timeDown = this.game.time.time;
+        this.duration = 0;
         this.repeats = 0;
 
         this.event = event;
@@ -268,6 +278,7 @@ Phaser.DeviceButton.prototype = {
         this.isUp = true;
 
         this.timeDown = this.game.time.time;
+        this.duration = 0;
         this.repeats = 0;
 
         this.altKey = false;
@@ -298,7 +309,7 @@ Phaser.DeviceButton.prototype = {
 Phaser.DeviceButton.prototype.constructor = Phaser.DeviceButton;
 
 /**
-* How long the button has been held down for in milliseconds.
+* How long the button has been held down.
 * If not currently down it returns -1.
 * 
 * @name Phaser.DeviceButton#duration

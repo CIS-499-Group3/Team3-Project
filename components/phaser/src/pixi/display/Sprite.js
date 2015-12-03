@@ -224,21 +224,8 @@ PIXI.Sprite.prototype.getBounds = function(matrix)
     if (b === 0 && c === 0)
     {
         // scale may be negative!
-        if (a < 0)
-        {
-            a *= -1;
-            var temp = w0;
-            w0 = -w1;
-            w1 = -temp; 
-        }
-
-        if (d < 0)
-        {
-            d *= -1;
-            var temp = h0;
-            h0 = -h1;
-            h1 = -temp; 
-        }
+        if (a < 0) a *= -1;
+        if (d < 0) d *= -1;
 
         // this means there is no rotation going on right? RIGHT?
         // if thats the case then we can avoid checking the bound values! yay         
@@ -377,7 +364,7 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession, matrix)
 PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
 {
     // If the sprite is not visible or the alpha is 0 then no need to render this element
-    if (!this.visible || this.alpha === 0 || !this.renderable || this.texture.crop.width <= 0 || this.texture.crop.height <= 0)
+    if (this.visible === false || this.alpha === 0 || this.renderable === false || this.texture.crop.width <= 0 || this.texture.crop.height <= 0)
     {
         return;
     }
