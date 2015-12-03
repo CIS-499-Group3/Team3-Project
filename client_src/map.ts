@@ -125,7 +125,8 @@ export class TileView {
     }
 
     getTile(): Phaser.Tile {
-        return this.map.getTilemap().getTile(this.x, this.y);
+        var tile = this.map.getTilemap().getTile(this.x, this.y);
+        return tile;
     }
 
     // Gets the tileset index of the tile.

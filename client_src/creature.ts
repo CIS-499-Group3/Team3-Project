@@ -456,7 +456,7 @@ export class SearchGhost extends Ghost {
     attemptDesiredDirection(){
         super.attemptDesiredDirection();
         if (this.afraid) return;
-        if (this.nextTile == null){
+        if (this.nextTile == null || this.getContainingTile() == null){
             return;
         }
         
