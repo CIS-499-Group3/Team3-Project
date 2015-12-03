@@ -223,7 +223,7 @@ export class Ghost extends DesiredDirectionCreature {
         this.animations.add('creep', [0,8,9,10,11,12,13,14],10, true);
         this.animations.add('blue', [1,15], 10, true);
         this.animations.add('blink', [2,3,1,15], 10, true);
-        this.animations.play('creep');
+	this.animations.play('creep');
         
         //ghost directional animations
         this.animations.add('northcreep', [0,8],10, true);
@@ -277,7 +277,7 @@ export class Ghost extends DesiredDirectionCreature {
             nextTile = this.getContainingTile().viewDirection(this.currentDirection);
             this.setDesiredDirection(this.currentDirection);
         }
-        if (!this.alive) this.setDeadGhostLook();
+        if (!this.alive) this.setDeadGhostLook();		
     }
 }
 
