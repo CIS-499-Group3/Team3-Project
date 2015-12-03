@@ -29,7 +29,7 @@ class PacmanGame {
 
     constructor() {
         console.log("Yo!");
-        this.game = new Phaser.Game(800, 1000, Phaser.AUTO, 'game-div', this);
+        this.game = new Phaser.Game(1000, 1000, Phaser.AUTO, 'game-div', this);
         this.score = 0;
         this.lives = 3;
         //this.lives = 99;
