@@ -1,7 +1,7 @@
 import map = require('./map');
 import search = require('./astarsearch');
 import util = require('./util');
-var BASE_SPEED: number = 100;
+var BASE_SPEED: number = 150;
 
 // Number of pixels a sprite can be away from the center of the tile to be counted as "at the center".
 // Smaller values will likely cause bugs as creatures skip over their turns.
@@ -11,7 +11,7 @@ const CENTER_TILE_EPSILON: number = 5;
 // A "Creature" is a sprite that moves with and understands the grid system of the pacman game.
 export class Creature extends Phaser.Sprite {
     private map: map.PacMap;
-    private speed: number;
+    protected speed: number;
     public faceMovementDirection: boolean;
 
     constructor(game: Phaser.Game, map: map.PacMap, xtile: number, ytile: number, key: string){
@@ -59,19 +59,19 @@ export class Creature extends Phaser.Sprite {
         if (this.faceMovementDirection) this.setFacing(direction);
 
         if (direction === map.Direction.NORTH) {
-            this.body.velocity.y = -BASE_SPEED;
+            this.body.velocity.y = -this.speed;
             this.body.velocity.x = 0;
 
         } else if (direction === map.Direction.SOUTH) {
-            this.body.velocity.y = BASE_SPEED;
+            this.body.velocity.y = this.speed;
             this.body.velocity.x = 0;
 
         } else if (direction === map.Direction.EAST) {
-            this.body.velocity.x = BASE_SPEED;
+            this.body.velocity.x = this.speed;
             this.body.velocity.y = 0;
 
         } else if (direction === map.Direction.WEST) {
-            this.body.velocity.x = -BASE_SPEED;
+            this.body.velocity.x = -this.speed;
             this.body.velocity.y = 0;
 
         } else {
@@ -502,6 +502,7 @@ export class CornersGhostChange extends SearchGhost {
 export class SeekPacmanGhost extends SearchGhost {
     constructor(game: Phaser.Game, pmap: map.PacMap, xtile, ytile, key){
         super(game, pmap, xtile, ytile, key);
+        this.speed -= 5;
     }
 
     setNewGoal(): void {

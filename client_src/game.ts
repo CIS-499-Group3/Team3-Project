@@ -237,12 +237,16 @@ class PacmanGame {
         console.log("Power pellet eaten");
         this.blinky1.afraid = true;
         this.blinky1.animations.play('blue');
+        this.blinky1.setSpeed(100);
         this.inky1.afraid = true;
         this.inky1.animations.play('blue');
+        this.inky1.setSpeed(100);
         this.pinky1.afraid = true;
         this.pinky1.animations.play('blue');
+        this.pinky1.setSpeed(100);
         this.clyde1.afraid = true;
         this.clyde1.animations.play('blue');
+        this.clyde1.setSpeed(100);
         this.game.time.events.add(5000, () => {
             this.blinky1.animations.play('blink');
             this.inky1.animations.play('blink');
@@ -251,9 +255,13 @@ class PacmanGame {
         });
         this.game.time.events.add(10000, () => {
             this.blinky1.afraid = false;
+            this.blinky1.setSpeed(150);
             this.inky1.afraid = false;
+            this.inky1.setSpeed(150);
             this.pinky1.afraid = false;
+            this.pinky1.setSpeed(150);
             this.clyde1.afraid = false;
+            this.clyde1.setSpeed(145);
         });
     }
 
