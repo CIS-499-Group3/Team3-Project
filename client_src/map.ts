@@ -28,8 +28,10 @@ export class PacMap {
     }
 
     getCorners(): TileView[] {
-        return [this.viewOf(1, 1), this.viewOf(this.getWidth()-2, 1), this.viewOf(1, this.getHeight()-2),
-            this.viewOf(this.getHeight()-2, this.getWidth()-2)]
+        var qq =  [this.viewOf(1, 1), this.viewOf(this.getWidth()-2, 1), this.viewOf(1, this.getHeight()-2),
+                   this.viewOf(this.getWidth()-2, this.getHeight()-2)]
+        console.log(qq);
+        return qq;
     }
 
     getTilemap(): Phaser.Tilemap {
